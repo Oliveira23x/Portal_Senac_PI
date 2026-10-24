@@ -1,0 +1,10 @@
+node_modules/
+.env
+backend/data/
+android/.gradle/
+android/.idea/
+android/.kotlin/
+android/local.properties
+android/**/build/
+*.jks
+*.keystore

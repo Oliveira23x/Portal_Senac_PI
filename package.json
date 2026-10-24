@@ -1,0 +1,21 @@
+{
+  "name": "portal-academico-web-android",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0 <25"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env backend/server.mjs",
+    "dev": "node --env-file-if-exists=.env --watch backend/server.mjs",
+    "test": "node --test backend/test/*.test.mjs",
+    "css": "tailwindcss -i frontend/tailwind.input.css -o frontend/styles.css --content frontend/index.html,frontend/app.js --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.17"
+  },
+  "dependencies": {
+    "expo": "^58.0.17"
+  }
+}

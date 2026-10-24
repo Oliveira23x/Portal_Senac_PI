@@ -1,0 +1,2020 @@
+<!doctype html>
+<html lang="pt-BR" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Acadêmico - Sistema Completo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .notification {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .loading {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        .login-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .floating-shape {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .input-focus:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
+        }
+        
+        .grade-card {
+            transition: all 0.3s ease;
+        }
+        
+        .grade-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        /* Modal styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Responsive modal */
+        @media (max-width: 768px) {
+            .modal-content {
+                padding: 1rem;
+                margin: 0.5rem;
+                max-width: calc(100vw - 1rem);
+            }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-gradient-to-br from-blue-50 to-indigo-100 font-sans"><!-- LOGIN PAGE -->
+  <div id="login-page" class="min-h-full bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 relative overflow-hidden"><!-- Background Decorative Elements -->
+   <div class="absolute inset-0 overflow-hidden">
+    <div class="floating-shape absolute top-20 left-10 w-32 h-32 bg-white bg-opacity-10 rounded-full"></div>
+    <div class="floating-shape absolute top-40 right-20 w-24 h-24 bg-white bg-opacity-5 rounded-full" style="animation-delay: -2s;"></div>
+    <div class="floating-shape absolute bottom-32 left-1/4 w-40 h-40 bg-white bg-opacity-5 rounded-full" style="animation-delay: -4s;"></div>
+    <div class="floating-shape absolute bottom-20 right-10 w-20 h-20 bg-white bg-opacity-10 rounded-full" style="animation-delay: -1s;"></div>
+   </div><!-- Main Container -->
+   <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="max-w-md w-full space-y-8"><!-- Header -->
+     <div class="text-center fade-in">
+      <div class="mx-auto h-20 w-20 bg-white rounded-2xl shadow-2xl flex items-center justify-center mb-6"><span class="text-4xl">📚</span>
+      </div>
+      <h2 class="text-4xl font-bold text-white mb-2">Portal Acadêmico</h2>
+      <p class="text-blue-100 text-lg">Sistema de Gestão Estudantil</p>
+     </div><!-- Login Form -->
+     <div class="login-card rounded-2xl shadow-2xl p-8 border border-white border-opacity-20 fade-in" style="animation-delay: 0.2s;">
+      <form id="login-form" class="space-y-6"><!-- User Type Selection -->
+       <div><label class="block text-sm font-medium text-gray-700 mb-3">Tipo de Usuário</label>
+        <div class="grid grid-cols-2 gap-3"><button type="button" onclick="selectUserType('student')" id="student-type-btn" class="user-type-btn flex flex-col items-center p-4 border-2 border-blue-200 rounded-xl hover:border-blue-400 transition-all bg-blue-50 border-blue-500"> <span class="text-2xl mb-2">🎓</span> <span class="text-sm font-medium text-blue-700">Estudante</span> </button> <button type="button" onclick="selectUserType('professor')" id="professor-type-btn" class="user-type-btn flex flex-col items-center p-4 border-2 border-gray-200 rounded-xl hover:border-blue-400 transition-all"> <span class="text-2xl mb-2">👨‍🏫</span> <span class="text-sm font-medium text-gray-600">Professor</span> </button>
+        </div>
+       </div><!-- Login Fields -->
+       <div class="space-y-4">
+        <div><label for="login-id" class="block text-sm font-medium text-gray-700 mb-2"> <span id="login-label">Matrícula</span> </label>
+         <div class="relative"><input id="login-id" name="login-id" type="text" required class="input-focus appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" placeholder="Digite sua matrícula">
+          <div class="absolute inset-y-0 right-0 pr-3 flex items-center"><span class="text-gray-400">👤</span>
+          </div>
+         </div>
+        </div>
+        <div><label for="password" class="block text-sm font-medium text-gray-700 mb-2">Senha</label>
+         <div class="relative"><input id="password" name="password" type="password" required class="input-focus appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" placeholder="Digite sua senha"> <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center"> <span id="password-toggle" class="text-gray-400 hover:text-gray-600 cursor-pointer">👁️</span> </button>
+         </div>
+        </div>
+       </div><!-- Remember Me & Forgot Password -->
+       <div class="flex items-center justify-between">
+        <div class="flex items-center"><input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"> <label for="remember-me" class="ml-2 block text-sm text-gray-700"> Lembrar-me </label>
+        </div>
+        <div class="text-sm"><a href="#" onclick="showForgotPassword()" class="font-medium text-blue-600 hover:text-blue-500 transition-colors"> Esqueceu a senha? </a>
+        </div>
+       </div><!-- Login Button -->
+       <div><button type="submit" id="login-btn" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105 shadow-lg"> <span id="login-text">Entrar</span> <span id="login-loading" class="hidden">
+          <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle> <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg> Entrando... </span> </button>
+       </div><!-- Demo Credentials -->
+       <div class="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
+        <h4 class="text-sm font-medium text-gray-700 mb-2">Credenciais de Demonstração:</h4>
+        <div class="text-xs text-gray-600 space-y-1">
+         <div class="flex justify-between"><span>Estudante:</span> <span class="font-mono">2024001 / senha123</span>
+         </div>
+         <div class="flex justify-between"><span>Professor:</span> <span class="font-mono">prof001 / prof123</span>
+         </div>
+        </div><button type="button" onclick="fillDemoCredentials('student')" class="mt-2 text-xs text-blue-600 hover:text-blue-800 underline"> Usar credenciais de estudante </button>
+       </div>
+      </form>
+     </div><!-- Footer -->
+     <div class="text-center text-blue-100 text-sm fade-in" style="animation-delay: 0.4s;">
+      <p>© 2024 Portal Acadêmico. Todos os direitos reservados.</p>
+      <p class="mt-1">Desenvolvido para facilitar sua jornada acadêmica</p>
+     </div>
+    </div>
+   </div><!-- Forgot Password Modal -->
+   <div id="forgot-password-modal" class="modal">
+    <div class="modal-content max-w-md w-full">
+     <h3 class="text-2xl font-bold text-gray-900 mb-4">Recuperar Senha</h3>
+     <p class="text-gray-600 mb-6">Digite sua matrícula ou código de professor para receber instruções de recuperação.</p>
+     <form id="forgot-form">
+      <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">Matrícula/Código</label> <input type="text" id="forgot-id" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Digite sua matrícula ou código">
+      </div>
+      <div class="flex space-x-3"><button type="button" onclick="closeForgotPassword()" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50"> Cancelar </button> <button type="submit" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700"> Enviar </button>
+      </div>
+     </form>
+    </div>
+   </div>
+  </div><!-- PORTAL PAGE -->
+  <div id="portal-page" class="min-h-full" style="display: none;"><!-- Header -->
+   <header class="bg-white shadow-lg border-b-4 border-blue-600">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="flex justify-between items-center py-4">
+      <div class="flex items-center space-x-4">
+       <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xl">📚</span>
+       </div>
+       <div>
+        <h1 class="text-2xl font-bold text-gray-900">Portal Acadêmico</h1>
+        <p class="text-sm text-gray-600">Sistema de Gestão Estudantil</p>
+       </div>
+      </div>
+      <div class="flex items-center space-x-4">
+       <div class="text-right">
+        <p id="user-name" class="text-sm font-medium text-gray-900">João Silva</p>
+        <p id="user-id" class="text-xs text-gray-600">Matrícula: 2024001</p>
+       </div>
+       <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center"><span id="user-avatar" class="text-blue-600 font-semibold">JS</span>
+       </div><button onclick="logout()" class="text-sm text-red-600 hover:text-red-800 font-medium"> Sair </button>
+      </div>
+     </div>
+    </div>
+   </header><!-- Navigation Tabs -->
+   <nav class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><!-- Student Tabs -->
+     <div id="student-tabs" class="flex space-x-8 overflow-x-auto"><button onclick="showTab('desempenho')" class="tab-btn py-4 px-2 border-b-2 border-blue-600 text-blue-600 font-medium whitespace-nowrap"> 📊 Desempenho </button> <button onclick="showTab('agenda')" class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"> 📅 Agenda </button> <button onclick="showTab('assistente')" class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"> 🤖 Assistente </button> <button onclick="showTab('vagas')" class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"> 💼 Vagas </button> <button onclick="showTab('certificados')" class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"> 🎓 Certificados </button> <button onclick="showTab('feedback')" class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"> 💬 Feedback </button>
+     </div><!-- Professor Tabs -->
+     <div id="professor-tabs" class="flex space-x-8 overflow-x-auto" style="display: none;"><button onclick="showTab('professor-desempenho')" class="tab-btn py-4 px-2 border-b-2 border-blue-600 text-blue-600 font-medium whitespace-nowrap"> 📊 Lançar Notas </button> <button onclick="showTab('professor-agenda')" class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"> 📅 Gerenciar Agenda </button> <button onclick="showTab('professor-feedback')" class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"> 💬 Feedbacks </button> <button onclick="showTab('professor-vagas')" class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"> 💼 Notificar Vagas </button>
+     </div>
+    </div>
+   </nav><!-- Main Content -->
+   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><!-- UC01 - Desempenho -->
+    <div id="desempenho" class="tab-content active fade-in">
+     <div class="mb-6">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2">Desempenho Acadêmico</h2>
+      <p class="text-gray-600">Visualize suas avaliações, médias e histórico acadêmico</p>
+     </div><!-- Resumo Geral -->
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
+       <div class="flex items-center justify-between">
+        <div>
+         <p class="text-sm font-medium text-gray-600">Avaliação Geral</p>
+         <p class="text-3xl font-bold text-green-600">A</p>
+         <p class="text-xs text-gray-500">Atendido</p>
+        </div>
+        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center"><span class="text-green-600 text-xl">📈</span>
+        </div>
+       </div>
+      </div>
+      <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
+       <div class="flex items-center justify-between">
+        <div>
+         <p class="text-sm font-medium text-gray-600">Disciplinas Cursadas</p>
+         <p class="text-3xl font-bold text-blue-600">12</p>
+        </div>
+        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center"><span class="text-blue-600 text-xl">📚</span>
+        </div>
+       </div>
+      </div>
+      <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500">
+       <div class="flex items-center justify-between">
+        <div>
+         <p class="text-sm font-medium text-gray-600">Faltas Totais</p>
+         <p class="text-3xl font-bold text-yellow-600">12</p>
+         <p class="text-xs text-gray-500">15% de faltas</p>
+        </div>
+        <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center"><span class="text-yellow-600 text-xl">⚠️</span>
+        </div>
+       </div>
+      </div>
+     </div><!-- Avisos de Frequência -->
+     <div class="mb-6 space-y-3">
+      <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
+       <div class="flex items-center">
+        <div class="flex-shrink-0"><span class="text-yellow-400 text-xl">⚠️</span>
+        </div>
+        <div class="ml-3">
+         <p class="text-sm text-yellow-800"><strong>Atenção:</strong> Você possui 15% de faltas. O limite máximo é 25% para aprovação.</p>
+        </div>
+       </div>
+      </div>
+      <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
+       <div class="flex items-center">
+        <div class="flex-shrink-0"><span class="text-red-400 text-xl">🚨</span>
+        </div>
+        <div class="ml-3">
+         <p class="text-sm text-red-800"><strong>Disciplina em Risco:</strong> Redes de Computadores - 22% de faltas (18 faltas de 80 aulas).</p>
+        </div>
+       </div>
+      </div>
+     </div><!-- Avaliações por Disciplina -->
+     <div class="bg-white rounded-xl shadow-md p-6">
+      <h3 class="text-xl font-semibold text-gray-900 mb-6">Avaliações e Frequência por Disciplina</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+       <div class="grade-card bg-gray-50 rounded-lg p-4 border">
+        <div class="flex justify-between items-center mb-2">
+         <h4 class="font-medium text-gray-900">Algoritmos e Programação</h4><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium">A - Atendido</span>
+        </div>
+        <div class="flex justify-between text-sm text-gray-600 mb-1"><span>P1: A (Atendido) | P2: A (Atendido) | Trabalho: A (Atendido)</span> <span>Aprovado</span>
+        </div>
+        <div class="flex justify-between text-xs text-gray-500"><span>Faltas: 2 (5%)</span> <span class="text-green-600">✓ Frequência OK</span>
+        </div>
+       </div>
+       <div class="grade-card bg-gray-50 rounded-lg p-4 border">
+        <div class="flex justify-between items-center mb-2">
+         <h4 class="font-medium text-gray-900">Banco de Dados</h4><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium">A - Atendido</span>
+        </div>
+        <div class="flex justify-between text-sm text-gray-600 mb-1"><span>P1: PA (Parcialmente Atendido) | P2: A (Atendido) | Trabalho: A (Atendido)</span> <span>Aprovado</span>
+        </div>
+        <div class="flex justify-between text-xs text-gray-500"><span>Faltas: 4 (10%)</span> <span class="text-green-600">✓ Frequência OK</span>
+        </div>
+       </div>
+       <div class="grade-card bg-gray-50 rounded-lg p-4 border">
+        <div class="flex justify-between items-center mb-2">
+         <h4 class="font-medium text-gray-900">Engenharia de Software</h4><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm font-medium">PA - Parcialmente Atendido</span>
+        </div>
+        <div class="flex justify-between text-sm text-gray-600 mb-1"><span>P1: PA (Parcialmente Atendido) | P2: PA (Parcialmente Atendido) | Trabalho: A (Atendido)</span> <span>Aprovado</span>
+        </div>
+        <div class="flex justify-between text-xs text-gray-500"><span>Faltas: 8 (20%)</span> <span class="text-yellow-600">⚠️ Atenção</span>
+        </div>
+       </div>
+       <div class="grade-card bg-red-50 rounded-lg p-4 border border-red-200">
+        <div class="flex justify-between items-center mb-2">
+         <h4 class="font-medium text-gray-900">Redes de Computadores</h4><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-medium">Em Curso</span>
+        </div>
+        <div class="flex justify-between text-sm text-gray-600 mb-1"><span>P1: PA (Parcialmente Atendido) | P2: - | Trabalho: -</span> <span>Cursando</span>
+        </div>
+        <div class="flex justify-between text-xs text-gray-500"><span>Faltas: 18 (22%)</span> <span class="text-red-600">🚨 Risco de Reprovação</span>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- UC02 - Agenda -->
+    <div id="agenda" class="tab-content">
+     <div class="mb-6">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2">Agenda Acadêmica</h2>
+      <p class="text-gray-600">Acompanhe suas aulas, provas e eventos</p>
+     </div>
+     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><!-- Calendário -->
+      <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+       <h3 class="text-xl font-semibold text-gray-900 mb-4">Próximos Eventos</h3>
+       <div class="space-y-4">
+        <div class="flex items-center p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
+         <div class="flex-shrink-0 w-12 h-12 bg-red-100 rounded-full flex items-center justify-center"><span class="text-red-600 font-bold">15</span>
+         </div>
+         <div class="ml-4 flex-1">
+          <h4 class="font-medium text-gray-900">Prova de Redes de Computadores</h4>
+          <p class="text-sm text-gray-600">Hoje, 14:00 - Sala 201</p>
+         </div><span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">Prova</span>
+        </div>
+        <div class="flex items-center p-4 bg-blue-50 border-l-4 border-blue-500 rounded-lg">
+         <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center"><span class="text-blue-600 font-bold">16</span>
+         </div>
+         <div class="ml-4 flex-1">
+          <h4 class="font-medium text-gray-900">Aula de Algoritmos</h4>
+          <p class="text-sm text-gray-600">Amanhã, 08:00 - Laboratório 3</p>
+         </div><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">Aula</span>
+        </div>
+        <div class="flex items-center p-4 bg-green-50 border-l-4 border-green-500 rounded-lg">
+         <div class="flex-shrink-0 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center"><span class="text-green-600 font-bold">18</span>
+         </div>
+         <div class="ml-4 flex-1">
+          <h4 class="font-medium text-gray-900">Entrega do Projeto Final</h4>
+          <p class="text-sm text-gray-600">Sexta-feira, 23:59 - Online</p>
+         </div><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Trabalho</span>
+        </div>
+        <div class="flex items-center p-4 bg-purple-50 border-l-4 border-purple-500 rounded-lg">
+         <div class="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center"><span class="text-purple-600 font-bold">20</span>
+         </div>
+         <div class="ml-4 flex-1">
+          <h4 class="font-medium text-gray-900">Palestra: Inteligência Artificial</h4>
+          <p class="text-sm text-gray-600">Domingo, 19:00 - Auditório Principal</p>
+         </div><span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">Evento</span>
+        </div>
+       </div>
+      </div><!-- Horário Semanal -->
+      <div class="bg-white rounded-xl shadow-md p-6">
+       <h3 class="text-xl font-semibold text-gray-900 mb-4">Horário Semanal</h3>
+       <div class="space-y-2 text-sm">
+        <div class="flex justify-between py-2 border-b"><span class="font-medium">Segunda</span> <span class="text-gray-600">08:00 - Algoritmos</span>
+        </div>
+        <div class="flex justify-between py-2 border-b"><span class="font-medium">Terça</span> <span class="text-gray-600">14:00 - Banco de Dados</span>
+        </div>
+        <div class="flex justify-between py-2 border-b"><span class="font-medium">Quarta</span> <span class="text-gray-600">10:00 - Eng. Software</span>
+        </div>
+        <div class="flex justify-between py-2 border-b"><span class="font-medium">Quinta</span> <span class="text-gray-600">16:00 - Redes</span>
+        </div>
+        <div class="flex justify-between py-2"><span class="font-medium">Sexta</span> <span class="text-gray-600">08:00 - Laboratório</span>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- UC03 - Assistente -->
+    <div id="assistente" class="tab-content">
+     <div class="mb-6">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2">Assistente Acadêmico</h2>
+      <p class="text-gray-600">Tire suas dúvidas sobre avaliações, horários e disciplinas</p>
+     </div>
+     <div class="bg-white rounded-xl shadow-md p-6">
+      <div id="chat-container" class="h-96 overflow-y-auto mb-4 p-4 bg-gray-50 rounded-lg">
+       <div class="flex items-start space-x-3 mb-4">
+        <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center"><span class="text-white text-sm">🤖</span>
+        </div>
+        <div class="bg-white rounded-lg p-3 shadow-sm max-w-md">
+         <p class="text-sm">Olá! Sou seu assistente acadêmico. Como posso ajudá-lo hoje? Posso responder sobre suas avaliações, horários, disciplinas e muito mais!</p>
+        </div>
+       </div>
+      </div>
+      <form id="chat-form" class="flex space-x-3"><input type="text" id="chat-input" placeholder="Digite sua dúvida aqui..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required> <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"> Enviar </button>
+      </form>
+      <div class="mt-4">
+       <p class="text-xs text-gray-500 mb-2">Perguntas frequentes:</p>
+       <div class="flex flex-wrap gap-2"><button onclick="quickQuestion('Qual minha avaliação geral?')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs hover:bg-gray-200"> Qual minha avaliação geral? </button> <button onclick="quickQuestion('Quando é minha próxima prova?')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs hover:bg-gray-200"> Próxima prova? </button> <button onclick="quickQuestion('Quantos créditos tenho?')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs hover:bg-gray-200"> Quantos créditos? </button>
+       </div>
+      </div>
+     </div>
+    </div><!-- UC04 - Vagas -->
+    <div id="vagas" class="tab-content">
+     <div class="mb-6">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2">Vagas de Estágio</h2>
+      <p class="text-gray-600">Encontre oportunidades de estágio e pratique entrevistas</p>
+     </div><!-- Navegação das Abas de Vagas -->
+     <div class="mb-6">
+      <div class="flex space-x-4 border-b"><button onclick="showJobsTab('vagas-list')" id="vagas-list-btn" class="job-tab-btn px-4 py-2 border-b-2 border-blue-600 text-blue-600 font-medium"> 📋 Vagas Disponíveis </button> <button onclick="showJobsTab('interview-simulator')" id="interview-simulator-btn" class="job-tab-btn px-4 py-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium"> 🎯 Simulador de Entrevista </button>
+      </div>
+     </div><!-- Aba de Vagas Disponíveis -->
+     <div id="vagas-list" class="job-tab-content">
+      <div class="mb-6">
+       <div class="flex flex-col sm:flex-row gap-4"><input type="text" placeholder="Buscar vagas..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option>Todas as áreas</option> <option>Desenvolvimento</option> <option>Análise de Sistemas</option> <option>Banco de Dados</option> <option>Redes</option> </select> <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"> Buscar </button>
+       </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+       <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
+        <div class="flex justify-between items-start mb-4">
+         <div>
+          <h3 class="text-lg font-semibold text-gray-900">Desenvolvedor Frontend</h3>
+          <p class="text-sm text-gray-600">TechCorp Solutions</p>
+         </div><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Remoto</span>
+        </div>
+        <p class="text-sm text-gray-700 mb-4">Oportunidade para desenvolver interfaces web modernas usando React e TypeScript. Ambiente colaborativo e mentoria técnica.</p>
+        <div class="flex justify-between items-center mb-3"><span class="text-sm text-gray-500">Bolsa: R$ 1.200</span>
+        </div>
+        <div class="flex space-x-2"><button onclick="applyToJob('Desenvolvedor Frontend', 'TechCorp Solutions')" class="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"> Candidatar-se </button> <button onclick="viewJobDetails('job1')" class="px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 text-sm"> Ver detalhes </button>
+        </div>
+       </div>
+       <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
+        <div class="flex justify-between items-start mb-4">
+         <div>
+          <h3 class="text-lg font-semibold text-gray-900">Analista de Dados</h3>
+          <p class="text-sm text-gray-600">DataInsights Ltda</p>
+         </div><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">Presencial</span>
+        </div>
+        <p class="text-sm text-gray-700 mb-4">Trabalhe com análise de grandes volumes de dados, criação de dashboards e relatórios gerenciais usando Python e SQL.</p>
+        <div class="flex justify-between items-center mb-3"><span class="text-sm text-gray-500">Bolsa: R$ 1.000</span>
+        </div>
+        <div class="flex space-x-2"><button onclick="applyToJob('Analista de Dados', 'DataInsights Ltda')" class="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"> Candidatar-se </button> <button onclick="viewJobDetails('job2')" class="px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 text-sm"> Ver detalhes </button>
+        </div>
+       </div>
+       <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500">
+        <div class="flex justify-between items-start mb-4">
+         <div>
+          <h3 class="text-lg font-semibold text-gray-900">Suporte Técnico</h3>
+          <p class="text-sm text-gray-600">InfraTech Services</p>
+         </div><span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">Híbrido</span>
+        </div>
+        <p class="text-sm text-gray-700 mb-4">Atendimento ao cliente, resolução de problemas técnicos e manutenção de sistemas. Ótima oportunidade para iniciantes.</p>
+        <div class="flex justify-between items-center mb-3"><span class="text-sm text-gray-500">Bolsa: R$ 800</span>
+        </div>
+        <div class="flex space-x-2"><button onclick="applyToJob('Suporte Técnico', 'InfraTech Services')" class="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"> Candidatar-se </button> <button onclick="viewJobDetails('job3')" class="px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 text-sm"> Ver detalhes </button>
+        </div>
+       </div>
+       <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500">
+        <div class="flex justify-between items-start mb-4">
+         <div>
+          <h3 class="text-lg font-semibold text-gray-900">Desenvolvedor Mobile</h3>
+          <p class="text-sm text-gray-600">AppMakers Studio</p>
+         </div><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">Presencial</span>
+        </div>
+        <p class="text-sm text-gray-700 mb-4">Desenvolvimento de aplicativos móveis para Android e iOS usando React Native. Projetos inovadores e equipe jovem.</p>
+        <div class="flex justify-between items-center mb-3"><span class="text-sm text-gray-500">Bolsa: R$ 1.400</span>
+        </div>
+        <div class="flex space-x-2"><button onclick="applyToJob('Desenvolvedor Mobile', 'AppMakers Studio')" class="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"> Candidatar-se </button> <button onclick="viewJobDetails('job4')" class="px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 text-sm"> Ver detalhes </button>
+        </div>
+       </div>
+      </div>
+     </div><!-- Aba do Simulador de Entrevista -->
+     <div id="interview-simulator" class="job-tab-content" style="display: none;">
+      <div class="bg-white rounded-xl shadow-md p-6 text-center">
+       <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-3xl">🎯</span>
+       </div>
+       <h3 class="text-2xl font-semibold text-gray-900 mb-2">Simulador de Entrevista</h3>
+       <p class="text-gray-600 mb-6">Pratique suas habilidades de entrevista com perguntas personalizadas</p><button onclick="startInterview()" class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium"> Iniciar Simulação </button>
+      </div>
+     </div>
+    </div><!-- UC05 - Certificados -->
+    <div id="certificados" class="tab-content">
+     <div class="mb-6">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2">Certificados</h2>
+      <p class="text-gray-600">Emita seus certificados digitais de conclusão</p>
+     </div>
+     <div class="grid grid-cols-1 md:grid-cols-2 gap-6"><!-- Certificados Disponíveis -->
+      <div class="bg-white rounded-xl shadow-md p-6">
+       <h3 class="text-xl font-semibold text-gray-900 mb-4">Certificados Disponíveis</h3>
+       <div class="space-y-4">
+        <div class="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-lg">
+         <div>
+          <h4 class="font-medium text-gray-900">Algoritmos e Programação</h4>
+          <p class="text-sm text-gray-600">Concluído em 15/06/2024</p>
+         </div><button onclick="generateCertificate('Algoritmos e Programação')" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm"> Baixar PDF </button>
+        </div>
+        <div class="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-lg">
+         <div>
+          <h4 class="font-medium text-gray-900">Banco de Dados</h4>
+          <p class="text-sm text-gray-600">Concluído em 20/07/2024</p>
+         </div><button onclick="generateCertificate('Banco de Dados')" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm"> Baixar PDF </button>
+        </div>
+        <div class="flex items-center justify-between p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+         <div>
+          <h4 class="font-medium text-gray-900">Certificado de Conclusão</h4>
+          <p class="text-sm text-gray-600">Disponível após conclusão do curso</p>
+         </div><button disabled class="px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed text-sm"> Indisponível </button>
+        </div>
+       </div>
+      </div><!-- Status Acadêmico -->
+      <div class="bg-white rounded-xl shadow-md p-6">
+       <h3 class="text-xl font-semibold text-gray-900 mb-4">Status Acadêmico</h3>
+       <div class="space-y-4">
+        <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg"><span class="text-sm font-medium text-gray-700">Situação Acadêmica</span> <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Regular</span>
+        </div>
+        <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg"><span class="text-sm font-medium text-gray-700">Situação Financeira</span> <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">Pendente</span>
+        </div>
+        <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+         <p class="text-sm text-yellow-800">⚠️ Certificados indisponíveis devido a pendências financeiras. Entre em contato com a secretaria para regularizar.</p>
+        </div><button onclick="checkPaymentStatus()" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"> Verificar Pagamentos </button>
+       </div>
+      </div>
+     </div>
+    </div><!-- UC06 - Feedback -->
+    <div id="feedback" class="tab-content">
+     <div class="mb-6">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2">Feedback</h2>
+      <p class="text-gray-600">Envie comentários, sugestões ou reclamações sobre o curso</p>
+     </div>
+     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"><!-- Formulário de Feedback -->
+      <div class="bg-white rounded-xl shadow-md p-6">
+       <h3 class="text-xl font-semibold text-gray-900 mb-4">Enviar Feedback</h3>
+       <form id="feedback-form">
+        <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Feedback</label> <select id="feedback-type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="sugestao">Sugestão</option> <option value="reclamacao">Reclamação</option> <option value="elogio">Elogio</option> <option value="duvida">Dúvida</option> </select>
+        </div>
+        <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">Disciplina (opcional)</label> <select id="feedback-subject" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="">Selecione uma disciplina</option> <option value="algoritmos">Algoritmos e Programação</option> <option value="banco">Banco de Dados</option> <option value="engenharia">Engenharia de Software</option> <option value="redes">Redes de Computadores</option> </select>
+        </div>
+        <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">Mensagem</label> <textarea id="feedback-message" rows="6" placeholder="Descreva seu feedback detalhadamente..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required></textarea>
+        </div>
+        <div class="mb-4"><label class="flex items-center"> <input type="checkbox" id="feedback-anonymous" class="mr-2"> <span class="text-sm text-gray-700">Enviar feedback anonimamente</span> </label>
+        </div><button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"> Enviar Feedback </button>
+       </form>
+      </div><!-- Histórico de Feedbacks -->
+      <div class="bg-white rounded-xl shadow-md p-6">
+       <h3 class="text-xl font-semibold text-gray-900 mb-4">Meus Feedbacks</h3>
+       <div class="space-y-4">
+        <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-green-500">
+         <div class="flex justify-between items-start mb-2"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Sugestão</span> <span class="text-xs text-gray-500">10/11/2024</span>
+         </div>
+         <p class="text-sm text-gray-700 mb-2">Seria interessante ter mais exercícios práticos na disciplina de Algoritmos...</p>
+         <div class="flex items-center text-xs text-gray-500"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Respondido</span> <span class="ml-2">Algoritmos e Programação</span>
+         </div>
+        </div>
+        <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-yellow-500">
+         <div class="flex justify-between items-start mb-2"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">Reclamação</span> <span class="text-xs text-gray-500">05/11/2024</span>
+         </div>
+         <p class="text-sm text-gray-700 mb-2">O laboratório 3 está com problemas nos computadores...</p>
+         <div class="flex items-center text-xs text-gray-500"><span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full">Em análise</span> <span class="ml-2">Infraestrutura</span>
+         </div>
+        </div>
+        <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-blue-500">
+         <div class="flex justify-between items-start mb-2"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">Elogio</span> <span class="text-xs text-gray-500">01/11/2024</span>
+         </div>
+         <p class="text-sm text-gray-700 mb-2">Excelente didática do professor na disciplina de Banco de Dados!</p>
+         <div class="flex items-center text-xs text-gray-500"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">Encaminhado</span> <span class="ml-2">Banco de Dados</span>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- UC07 - Professor Desempenho -->
+    <div id="professor-desempenho" class="tab-content">
+     <div class="mb-6">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2">Lançar Avaliações e Frequência</h2>
+      <p class="text-gray-600">Gerencie o desempenho dos alunos em suas disciplinas</p>
+     </div>
+     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><!-- Seleção de Turma -->
+      <div class="bg-white rounded-xl shadow-md p-6">
+       <h3 class="text-xl font-semibold text-gray-900 mb-4">Selecionar Turma</h3>
+       <div class="space-y-4">
+        <div><label class="block text-sm font-medium text-gray-700 mb-2">Disciplina</label> <select id="professor-subject" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="">Selecione uma disciplina</option> <option value="algoritmos">Algoritmos e Programação</option> <option value="banco">Banco de Dados</option> <option value="engenharia">Engenharia de Software</option> <option value="redes">Redes de Computadores</option> </select>
+        </div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-2">Turma</label> <select id="professor-class" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="">Selecione uma turma</option> <option value="turma-a">Turma A - Manhã</option> <option value="turma-b">Turma B - Noite</option> </select>
+        </div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-2">Avaliação</label> <select id="assessment-type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="p1">Prova 1</option> <option value="p2">Prova 2</option> <option value="trabalho">Trabalho</option> <option value="frequencia">Frequência</option> </select>
+        </div><button onclick="loadStudents()" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"> Carregar Alunos </button>
+       </div>
+      </div><!-- Lista de Alunos -->
+      <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+       <h3 class="text-xl font-semibold text-gray-900 mb-4">Lançamento de Avaliações</h3>
+       <div id="students-list" class="space-y-4">
+        <div class="text-center text-gray-500 py-8">
+         <p>Selecione uma disciplina e turma para carregar os alunos</p>
+        </div>
+       </div>
+       <div id="save-section" class="mt-6 pt-6 border-t" style="display: none;">
+        <div class="flex justify-between items-center">
+         <div class="text-sm text-gray-600"><span id="students-count">0</span> alunos carregados
+         </div><button onclick="saveGrades()" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"> Salvar Alterações </button>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- UC08 - Professor Agenda -->
+    <div id="professor-agenda" class="tab-content">
+     <div class="mb-6">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2">Gerenciar Agenda</h2>
+      <p class="text-gray-600">Cadastre aulas, provas e eventos na agenda acadêmica</p>
+     </div>
+     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"><!-- Formulário de Evento -->
+      <div class="bg-white rounded-xl shadow-md p-6">
+       <h3 class="text-xl font-semibold text-gray-900 mb-4">Novo Evento</h3>
+       <form id="event-form">
+        <div class="space-y-4">
+         <div><label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Evento</label> <select id="event-type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="aula">Aula</option> <option value="prova">Prova</option> <option value="trabalho">Trabalho</option> <option value="evento">Evento Especial</option> </select>
+         </div>
+         <div><label class="block text-sm font-medium text-gray-700 mb-2">Título</label> <input type="text" id="event-title" placeholder="Ex: Prova de Algoritmos" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
+         </div>
+         <div><label class="block text-sm font-medium text-gray-700 mb-2">Disciplina</label> <select id="event-subject" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="algoritmos">Algoritmos e Programação</option> <option value="banco">Banco de Dados</option> <option value="engenharia">Engenharia de Software</option> <option value="redes">Redes de Computadores</option> </select>
+         </div>
+         <div class="grid grid-cols-2 gap-4">
+          <div><label class="block text-sm font-medium text-gray-700 mb-2">Data</label> <input type="date" id="event-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
+          </div>
+          <div><label class="block text-sm font-medium text-gray-700 mb-2">Horário</label> <input type="time" id="event-time" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
+          </div>
+         </div>
+         <div><label class="block text-sm font-medium text-gray-700 mb-2">Local</label> <input type="text" id="event-location" placeholder="Ex: Sala 201, Laboratório 3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
+         </div>
+         <div><label class="block text-sm font-medium text-gray-700 mb-2">Turma</label> <select id="event-class" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="turma-a">Turma A - Manhã</option> <option value="turma-b">Turma B - Noite</option> <option value="todas">Todas as Turmas</option> </select>
+         </div>
+         <div><label class="block text-sm font-medium text-gray-700 mb-2">Descrição (opcional)</label> <textarea id="event-description" rows="3" placeholder="Informações adicionais sobre o evento..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+         </div><button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"> Criar Evento </button>
+        </div>
+       </form>
+      </div><!-- Eventos Criados -->
+      <div class="bg-white rounded-xl shadow-md p-6">
+       <h3 class="text-xl font-semibold text-gray-900 mb-4">Eventos Criados</h3>
+       <div class="space-y-4 max-h-96 overflow-y-auto">
+        <div class="p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
+         <div class="flex justify-between items-start mb-2">
+          <h4 class="font-medium text-gray-900">Prova de Redes</h4><span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">Prova</span>
+         </div>
+         <p class="text-sm text-gray-600 mb-2">15/11/2024 - 14:00 | Sala 201</p>
+         <p class="text-xs text-gray-500">Turma A - Redes de Computadores</p>
+         <div class="mt-2 flex space-x-2"><button onclick="editEvent('prova-redes')" class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded"> Editar </button> <button onclick="deleteEvent('prova-redes')" class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded"> Excluir </button>
+         </div>
+        </div>
+        <div class="p-4 bg-blue-50 border-l-4 border-blue-500 rounded-lg">
+         <div class="flex justify-between items-start mb-2">
+          <h4 class="font-medium text-gray-900">Aula de Algoritmos</h4><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">Aula</span>
+         </div>
+         <p class="text-sm text-gray-600 mb-2">16/11/2024 - 08:00 | Laboratório 3</p>
+         <p class="text-xs text-gray-500">Turma A - Algoritmos e Programação</p>
+         <div class="mt-2 flex space-x-2"><button onclick="editEvent('aula-algoritmos')" class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded"> Editar </button> <button onclick="deleteEvent('aula-algoritmos')" class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded"> Excluir </button>
+         </div>
+        </div>
+        <div class="p-4 bg-green-50 border-l-4 border-green-500 rounded-lg">
+         <div class="flex justify-between items-start mb-2">
+          <h4 class="font-medium text-gray-900">Entrega do Projeto</h4><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Trabalho</span>
+         </div>
+         <p class="text-sm text-gray-600 mb-2">18/11/2024 - 23:59 | Online</p>
+         <p class="text-xs text-gray-500">Todas as Turmas - Engenharia de Software</p>
+         <div class="mt-2 flex space-x-2"><button onclick="editEvent('projeto-final')" class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded"> Editar </button> <button onclick="deleteEvent('projeto-final')" class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded"> Excluir </button>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- UC09 - Professor Feedback -->
+    <div id="professor-feedback" class="tab-content">
+     <div class="mb-6">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2">Feedbacks dos Alunos</h2>
+      <p class="text-gray-600">Visualize e responda aos feedbacks recebidos dos estudantes</p>
+     </div>
+     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><!-- Filtros -->
+      <div class="bg-white rounded-xl shadow-md p-6">
+       <h3 class="text-xl font-semibold text-gray-900 mb-4">Filtros</h3>
+       <div class="space-y-4">
+        <div><label class="block text-sm font-medium text-gray-700 mb-2">Disciplina</label> <select id="feedback-filter-subject" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="">Todas as disciplinas</option> <option value="algoritmos">Algoritmos e Programação</option> <option value="banco">Banco de Dados</option> <option value="engenharia">Engenharia de Software</option> <option value="redes">Redes de Computadores</option> </select>
+        </div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-2">Tipo</label> <select id="feedback-filter-type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="">Todos os tipos</option> <option value="sugestao">Sugestões</option> <option value="reclamacao">Reclamações</option> <option value="elogio">Elogios</option> <option value="duvida">Dúvidas</option> </select>
+        </div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-2">Status</label> <select id="feedback-filter-status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="">Todos os status</option> <option value="pendente">Pendentes</option> <option value="respondido">Respondidos</option> <option value="em-analise">Em análise</option> </select>
+        </div><button onclick="clearFilters()" class="w-full px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"> Limpar Filtros </button>
+       </div><!-- Estatísticas -->
+       <div class="mt-6 pt-6 border-t">
+        <h4 class="text-lg font-semibold text-gray-900 mb-3">Estatísticas</h4>
+        <div class="space-y-2 text-sm">
+         <div class="flex justify-between"><span class="text-gray-600">Total:</span> <span class="font-medium">15</span>
+         </div>
+         <div class="flex justify-between"><span class="text-gray-600">Pendentes:</span> <span class="font-medium text-red-600">5</span>
+         </div>
+         <div class="flex justify-between"><span class="text-gray-600">Respondidos:</span> <span class="font-medium text-green-600">8</span>
+         </div>
+         <div class="flex justify-between"><span class="text-gray-600">Em análise:</span> <span class="font-medium text-yellow-600">2</span>
+         </div>
+        </div>
+       </div>
+      </div><!-- Lista de Feedbacks -->
+      <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+       <h3 class="text-xl font-semibold text-gray-900 mb-4">Feedbacks Recebidos</h3>
+       <div id="feedbacks-list" class="space-y-4 max-h-96 overflow-y-auto">
+        <div class="p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
+         <div class="flex justify-between items-start mb-2">
+          <div class="flex items-center space-x-2"><span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">Reclamação</span> <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs">Pendente</span>
+          </div><span class="text-xs text-gray-500">12/11/2024</span>
+         </div>
+         <p class="text-sm text-gray-700 mb-2">O laboratório 3 está com problemas nos computadores. Vários alunos não conseguem executar os códigos...</p>
+         <div class="flex justify-between items-center text-xs text-gray-500 mb-3"><span>Algoritmos e Programação</span> <span>Aluno: João Silva (2024001)</span>
+         </div>
+         <div class="flex space-x-2"><button onclick="respondFeedback('fb001')" class="px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700"> Responder </button> <button onclick="markAsAnalyzing('fb001')" class="px-3 py-1 bg-yellow-600 text-white rounded text-xs hover:bg-yellow-700"> Em Análise </button>
+         </div>
+        </div>
+        <div class="p-4 bg-green-50 border-l-4 border-green-500 rounded-lg">
+         <div class="flex justify-between items-start mb-2">
+          <div class="flex items-center space-x-2"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Elogio</span> <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">Respondido</span>
+          </div><span class="text-xs text-gray-500">10/11/2024</span>
+         </div>
+         <p class="text-sm text-gray-700 mb-2">Excelente didática nas aulas! Os exemplos práticos ajudam muito no entendimento...</p>
+         <div class="flex justify-between items-center text-xs text-gray-500 mb-3"><span>Banco de Dados</span> <span>Aluno: Maria Santos (2024002)</span>
+         </div>
+         <div class="bg-blue-50 p-2 rounded text-xs"><strong>Sua resposta:</strong> Muito obrigado pelo feedback! Fico feliz que as aulas estejam sendo úteis.
+         </div>
+        </div>
+        <div class="p-4 bg-blue-50 border-l-4 border-blue-500 rounded-lg">
+         <div class="flex justify-between items-start mb-2">
+          <div class="flex items-center space-x-2"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">Sugestão</span> <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">Em Análise</span>
+          </div><span class="text-xs text-gray-500">08/11/2024</span>
+         </div>
+         <p class="text-sm text-gray-700 mb-2">Seria interessante ter mais exercícios práticos sobre normalização de banco de dados...</p>
+         <div class="flex justify-between items-center text-xs text-gray-500 mb-3"><span>Banco de Dados</span> <span>Aluno: Carlos Oliveira (2024003)</span>
+         </div>
+         <div class="flex space-x-2"><button onclick="respondFeedback('fb003')" class="px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700"> Responder </button> <button onclick="markAsResolved('fb003')" class="px-3 py-1 bg-green-600 text-white rounded text-xs hover:bg-green-700"> Marcar como Resolvido </button>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- UC10 - Professor Vagas -->
+    <div id="professor-vagas" class="tab-content">
+     <div class="mb-6">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2">Notificar Vagas de Emprego</h2>
+      <p class="text-gray-600">Selecione vagas disponíveis no sistema para encaminhar aos seus alunos</p>
+     </div>
+     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"><!-- Vagas Disponíveis -->
+      <div class="bg-white rounded-xl shadow-md p-6">
+       <h3 class="text-xl font-semibold text-gray-900 mb-4">💼 Vagas Disponíveis no Sistema</h3>
+       <div class="space-y-4 max-h-96 overflow-y-auto">
+        <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-all">
+         <div class="flex justify-between items-start mb-3">
+          <div class="flex-1">
+           <h4 class="text-lg font-semibold text-gray-900">Desenvolvedor Frontend</h4>
+           <p class="text-sm text-gray-600">TechCorp Solutions</p>
+           <div class="flex items-center space-x-2 mt-1"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Estágio</span> <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">Remoto</span>
+           </div>
+          </div>
+          <div class="text-right">
+           <p class="text-sm font-medium text-gray-900">R$ 1.200</p>
+           <p class="text-xs text-gray-500">Publicada há 2 dias</p>
+          </div>
+         </div>
+         <p class="text-sm text-gray-700 mb-3">Oportunidade para desenvolver interfaces web modernas usando React e TypeScript.</p>
+         <div class="flex justify-between items-center"><button onclick="viewJobDetails('job1')" class="text-sm text-blue-600 hover:text-blue-800 underline"> Ver detalhes completos </button> <button onclick="selectJobToNotify('job1')" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"> 📢 Selecionar para Notificar </button>
+         </div>
+        </div>
+        <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-all">
+         <div class="flex justify-between items-start mb-3">
+          <div class="flex-1">
+           <h4 class="text-lg font-semibold text-gray-900">Analista de Dados</h4>
+           <p class="text-sm text-gray-600">DataInsights Ltda</p>
+           <div class="flex items-center space-x-2 mt-1"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Estágio</span> <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">Presencial</span>
+           </div>
+          </div>
+          <div class="text-right">
+           <p class="text-sm font-medium text-gray-900">R$ 1.000</p>
+           <p class="text-xs text-gray-500">Publicada há 1 dia</p>
+          </div>
+         </div>
+         <p class="text-sm text-gray-700 mb-3">Trabalhe com análise de grandes volumes de dados usando Python e SQL.</p>
+         <div class="flex justify-between items-center"><button onclick="viewJobDetails('job2')" class="text-sm text-blue-600 hover:text-blue-800 underline"> Ver detalhes completos </button> <button onclick="selectJobToNotify('job2')" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"> 📢 Selecionar para Notificar </button>
+         </div>
+        </div>
+        <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-all">
+         <div class="flex justify-between items-start mb-3">
+          <div class="flex-1">
+           <h4 class="text-lg font-semibold text-gray-900">Suporte Técnico</h4>
+           <p class="text-sm text-gray-600">InfraTech Services</p>
+           <div class="flex items-center space-x-2 mt-1"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Estágio</span> <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">Híbrido</span>
+           </div>
+          </div>
+          <div class="text-right">
+           <p class="text-sm font-medium text-gray-900">R$ 800</p>
+           <p class="text-xs text-gray-500">Publicada há 3 dias</p>
+          </div>
+         </div>
+         <p class="text-sm text-gray-700 mb-3">Atendimento ao cliente e resolução de problemas técnicos.</p>
+         <div class="flex justify-between items-center"><button onclick="viewJobDetails('job3')" class="text-sm text-blue-600 hover:text-blue-800 underline"> Ver detalhes completos </button> <button onclick="selectJobToNotify('job3')" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"> 📢 Selecionar para Notificar </button>
+         </div>
+        </div>
+       </div>
+      </div><!-- Estatísticas e Histórico -->
+      <div class="bg-white rounded-xl shadow-md p-6">
+       <h3 class="text-xl font-semibold text-gray-900 mb-4">📊 Estatísticas e Histórico</h3><!-- Estatísticas -->
+       <div class="mb-6">
+        <h4 class="text-lg font-medium text-gray-800 mb-3">Estatísticas</h4>
+        <div class="space-y-2 text-sm">
+         <div class="flex justify-between"><span class="text-gray-600">Vagas disponíveis:</span> <span class="font-medium text-blue-600">8</span>
+         </div>
+         <div class="flex justify-between"><span class="text-gray-600">Notificadas hoje:</span> <span class="font-medium text-green-600">3</span>
+         </div>
+         <div class="flex justify-between"><span class="text-gray-600">Esta semana:</span> <span class="font-medium text-purple-600">12</span>
+         </div>
+        </div>
+       </div><!-- Histórico Recente -->
+       <div>
+        <h4 class="text-lg font-medium text-gray-800 mb-3">Últimas Notificações</h4>
+        <div class="space-y-3">
+         <div class="p-3 bg-green-50 border border-green-200 rounded-lg">
+          <div class="flex justify-between items-start mb-1">
+           <h5 class="text-sm font-medium text-gray-900">Desenvolvedor Frontend</h5><span class="text-xs text-gray-500">Hoje, 14:30</span>
+          </div>
+          <p class="text-xs text-gray-600">Notificado para: Turma A - Algoritmos</p>
+          <p class="text-xs text-green-600 mt-1">✅ 25 alunos notificados</p>
+         </div>
+         <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div class="flex justify-between items-start mb-1">
+           <h5 class="text-sm font-medium text-gray-900">Analista de Dados</h5><span class="text-xs text-gray-500">Ontem, 16:45</span>
+          </div>
+          <p class="text-xs text-gray-600">Notificado para: Todas as turmas</p>
+          <p class="text-xs text-blue-600 mt-1">📊 78 alunos notificados</p>
+         </div>
+         <div class="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+          <div class="flex justify-between items-start mb-1">
+           <h5 class="text-sm font-medium text-gray-900">Suporte Técnico</h5><span class="text-xs text-gray-500">2 dias atrás</span>
+          </div>
+          <p class="text-xs text-gray-600">Notificado para: Turma B - Redes</p>
+          <p class="text-xs text-purple-600 mt-1">🎯 18 alunos notificados</p>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </main>
+  </div><!-- Modal de Detalhes da Vaga -->
+  <div id="job-details-modal" class="modal">
+   <div class="modal-content max-w-4xl w-full">
+    <div class="flex justify-between items-start mb-6">
+     <h3 class="text-2xl font-bold text-gray-900">📋 Detalhes da Vaga</h3><button onclick="closeJobDetailsModal()" class="text-gray-400 hover:text-gray-600 text-2xl font-bold">×</button>
+    </div>
+    <div id="job-details-content" class="space-y-6"><!-- Conteúdo será preenchido dinamicamente -->
+    </div>
+    <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 pt-6 border-t mt-6"><button onclick="closeJobDetailsModal()" class="w-full sm:w-auto px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"> Fechar </button> <button onclick="selectJobFromDetails()" id="select-job-from-details" class="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"> 📢 Selecionar para Notificar </button>
+    </div>
+   </div>
+  </div><!-- Modal de Notificação de Vagas -->
+  <div id="job-notification-modal" class="modal">
+   <div class="modal-content max-w-2xl w-full">
+    <h3 class="text-2xl font-bold text-gray-900 mb-4">📢 Notificar Vaga para Alunos</h3><!-- Informações da Vaga Selecionada -->
+    <div id="selected-job-info" class="bg-gray-50 rounded-lg p-4 mb-6"><!-- Será preenchido dinamicamente -->
+    </div><!-- Seleção de Turmas -->
+    <div class="mb-6">
+     <h4 class="text-lg font-medium text-gray-800 mb-3">🎯 Selecionar Turmas para Notificação</h4>
+     <div class="bg-blue-50 rounded-lg p-4">
+      <div class="space-y-2"><label class="flex items-center p-2 hover:bg-blue-100 rounded"> <input type="checkbox" id="modal-notify-all" onchange="toggleAllModalClasses()" class="mr-3 h-4 w-4 text-blue-600"> <span class="text-sm font-medium text-blue-800">📚 Todas as turmas</span> </label>
+       <div class="ml-4 space-y-2 border-l-2 border-blue-200 pl-3"><label class="flex items-center p-2 hover:bg-blue-100 rounded"> <input type="checkbox" name="modal-classes" value="algoritmos-a" class="mr-3 h-4 w-4 text-blue-600"> <span class="text-sm text-gray-700">Algoritmos e Programação - Turma A</span> </label> <label class="flex items-center p-2 hover:bg-blue-100 rounded"> <input type="checkbox" name="modal-classes" value="algoritmos-b" class="mr-3 h-4 w-4 text-blue-600"> <span class="text-sm text-gray-700">Algoritmos e Programação - Turma B</span> </label> <label class="flex items-center p-2 hover:bg-blue-100 rounded"> <input type="checkbox" name="modal-classes" value="banco-a" class="mr-3 h-4 w-4 text-blue-600"> <span class="text-sm text-gray-700">Banco de Dados - Turma A</span> </label> <label class="flex items-center p-2 hover:bg-blue-100 rounded"> <input type="checkbox" name="modal-classes" value="banco-b" class="mr-3 h-4 w-4 text-blue-600"> <span class="text-sm text-gray-700">Banco de Dados - Turma B</span> </label> <label class="flex items-center p-2 hover:bg-blue-100 rounded"> <input type="checkbox" name="modal-classes" value="engenharia-a" class="mr-3 h-4 w-4 text-blue-600"> <span class="text-sm text-gray-700">Engenharia de Software - Turma A</span> </label> <label class="flex items-center p-2 hover:bg-blue-100 rounded"> <input type="checkbox" name="modal-classes" value="redes-a" class="mr-3 h-4 w-4 text-blue-600"> <span class="text-sm text-gray-700">Redes de Computadores - Turma A</span> </label>
+       </div>
+      </div>
+     </div>
+    </div><!-- Mensagem Personalizada -->
+    <div class="mb-6"><label class="block text-sm font-medium text-gray-700 mb-2">Mensagem Personalizada (opcional)</label> <textarea id="custom-message" rows="3" placeholder="Adicione uma mensagem personalizada para os alunos sobre esta vaga..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+    </div><!-- Resumo -->
+    <div class="bg-gray-50 rounded-lg p-4 mb-6">
+     <h5 class="text-sm font-medium text-gray-700 mb-2">📊 Resumo da Notificação</h5>
+     <div class="text-xs text-gray-600 space-y-1">
+      <div>
+       • Os alunos receberão a notificação na aba "Vagas"
+      </div>
+      <div>
+       • A vaga ficará disponível por 30 dias
+      </div>
+      <div>
+       • Você pode acompanhar as candidaturas
+      </div>
+     </div>
+    </div><!-- Botões de Ação -->
+    <div class="flex justify-end space-x-4"><button onclick="closeJobNotificationModal()" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"> Cancelar </button> <button onclick="confirmJobNotification()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"> 📢 Notificar Alunos </button>
+    </div>
+   </div>
+  </div><!-- Notification Container -->
+  <div id="notification-container" class="fixed top-4 right-4 z-50"></div>
+  <script>
+        // Global Variables
+        let selectedUserType = 'student';
+        let currentUserType = 'student';
+        let currentUser = null;
+        let selectedJobData = null;
+
+        // Job Database
+        const jobsDatabase = {
+            job1: {
+                title: 'Desenvolvedor Frontend',
+                company: 'TechCorp Solutions',
+                type: 'Estágio',
+                mode: 'Remoto',
+                area: 'Frontend',
+                salary: 'R$ 1.200',
+                description: 'Oportunidade para desenvolver interfaces web modernas usando React e TypeScript. Ambiente colaborativo e mentoria técnica.',
+                requirements: 'Conhecimento em HTML, CSS, JavaScript, React básico',
+                benefits: 'Vale alimentação, plano de saúde, mentoria técnica',
+                link: 'https://techcorp.com/vagas/frontend-2024'
+            },
+            job2: {
+                title: 'Analista de Dados',
+                company: 'DataInsights Ltda',
+                type: 'Estágio',
+                mode: 'Presencial',
+                area: 'Análise de Dados',
+                salary: 'R$ 1.000',
+                description: 'Trabalhe com análise de grandes volumes de dados, criação de dashboards e relatórios gerenciais usando Python e SQL.',
+                requirements: 'Python básico, SQL, Excel avançado',
+                benefits: 'Vale transporte, vale alimentação, curso de especialização',
+                link: 'https://datainsights.com/carreiras/analista-dados'
+            },
+            job3: {
+                title: 'Suporte Técnico',
+                company: 'InfraTech Services',
+                type: 'Estágio',
+                mode: 'Híbrido',
+                area: 'Suporte Técnico',
+                salary: 'R$ 800',
+                description: 'Atendimento ao cliente, resolução de problemas técnicos e manutenção de sistemas. Ótima oportunidade para iniciantes.',
+                requirements: 'Conhecimentos básicos de informática, boa comunicação',
+                benefits: 'Vale alimentação, plano de saúde, treinamentos',
+                link: 'https://infratech.com/vagas/suporte'
+            },
+            job4: {
+                title: 'Desenvolvedor Mobile',
+                company: 'AppMakers Studio',
+                type: 'Júnior',
+                mode: 'Presencial',
+                area: 'Mobile',
+                salary: 'R$ 1.400',
+                description: 'Desenvolvimento de aplicativos móveis para Android e iOS usando React Native. Projetos inovadores e equipe jovem.',
+                requirements: 'React Native, JavaScript, conhecimento em mobile',
+                benefits: 'Plano de saúde, vale alimentação, participação nos lucros',
+                link: 'https://appmakers.com/jobs/mobile-dev'
+            }
+        };
+
+        // LOGIN FUNCTIONS
+        function selectUserType(type) {
+            selectedUserType = type;
+            
+            const studentBtn = document.getElementById('student-type-btn');
+            const professorBtn = document.getElementById('professor-type-btn');
+            const loginLabel = document.getElementById('login-label');
+            const loginInput = document.getElementById('login-id');
+            
+            // Reset button styles
+            studentBtn.className = 'user-type-btn flex flex-col items-center p-4 border-2 border-gray-200 rounded-xl hover:border-blue-400 transition-all';
+            professorBtn.className = 'user-type-btn flex flex-col items-center p-4 border-2 border-gray-200 rounded-xl hover:border-blue-400 transition-all';
+            
+            if (type === 'student') {
+                studentBtn.className = 'user-type-btn flex flex-col items-center p-4 border-2 border-blue-200 rounded-xl hover:border-blue-400 transition-all bg-blue-50 border-blue-500';
+                studentBtn.querySelector('span:last-child').className = 'text-sm font-medium text-blue-700';
+                professorBtn.querySelector('span:last-child').className = 'text-sm font-medium text-gray-600';
+                
+                loginLabel.textContent = 'Matrícula';
+                loginInput.placeholder = 'Digite sua matrícula';
+            } else {
+                professorBtn.className = 'user-type-btn flex flex-col items-center p-4 border-2 border-blue-200 rounded-xl hover:border-blue-400 transition-all bg-blue-50 border-blue-500';
+                professorBtn.querySelector('span:last-child').className = 'text-sm font-medium text-blue-700';
+                studentBtn.querySelector('span:last-child').className = 'text-sm font-medium text-gray-600';
+                
+                loginLabel.textContent = 'Código do Professor';
+                loginInput.placeholder = 'Digite seu código';
+            }
+        }
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('password-toggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.textContent = '👁️';
+            }
+        }
+
+        function fillDemoCredentials(type) {
+            const loginInput = document.getElementById('login-id');
+            const passwordInput = document.getElementById('password');
+            
+            if (type === 'student') {
+                selectUserType('student');
+                loginInput.value = '2024001';
+                passwordInput.value = 'senha123';
+            } else {
+                selectUserType('professor');
+                loginInput.value = 'prof001';
+                passwordInput.value = 'prof123';
+            }
+            
+            showNotification('Credenciais de demonstração preenchidas!', 'info');
+        }
+
+        function showForgotPassword() {
+            document.getElementById('forgot-password-modal').classList.add('show');
+        }
+
+        function closeForgotPassword() {
+            document.getElementById('forgot-password-modal').classList.remove('show');
+        }
+
+        function logout() {
+            // Clear user data
+            localStorage.removeItem('userData');
+            sessionStorage.removeItem('userData');
+            
+            // Reset global variables
+            currentUser = null;
+            currentUserType = 'student';
+            selectedUserType = 'student';
+            
+            // Show login page and hide portal
+            document.getElementById('portal-page').style.display = 'none';
+            document.getElementById('login-page').style.display = 'block';
+            
+            // Reset login form
+            document.getElementById('login-form').reset();
+            selectUserType('student');
+            
+            showNotification('Logout realizado com sucesso!', 'success');
+        }
+
+        // PORTAL FUNCTIONS
+        function showPortal() {
+            const loginPage = document.getElementById('login-page');
+            const portalPage = document.getElementById('portal-page');
+            
+            // Update user info in portal
+            document.getElementById('user-name').textContent = currentUser.name;
+            document.getElementById('user-id').textContent = currentUser.type === 'student' ? `Matrícula: ${currentUser.id}` : `Código: ${currentUser.id}`;
+            document.getElementById('user-avatar').textContent = currentUser.name.split(' ').map(n => n[0]).join('');
+            
+            // Set current user type for proper initialization
+            currentUserType = currentUser.type;
+            
+            // Hide login page and show portal
+            loginPage.style.display = 'none';
+            portalPage.style.display = 'block';
+            
+            // Initialize the portal with correct user type
+            initializeUserInterface(currentUser.type);
+        }
+
+        function initializeUserInterface(userType) {
+            currentUserType = userType;
+            
+            if (userType === 'student') {
+                document.getElementById('student-tabs').style.display = 'flex';
+                document.getElementById('professor-tabs').style.display = 'none';
+                showTab('desempenho');
+            } else {
+                document.getElementById('student-tabs').style.display = 'none';
+                document.getElementById('professor-tabs').style.display = 'flex';
+                showTab('professor-desempenho');
+            }
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Reset all tab buttons
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(btn => {
+                btn.classList.remove('border-blue-600', 'text-blue-600');
+                btn.classList.add('border-transparent', 'text-gray-500');
+            });
+            
+            // Show selected tab
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.classList.add('active', 'fade-in');
+            }
+            
+            // Highlight active button
+            const activeButtons = document.querySelectorAll(`[onclick*="${tabName}"]`);
+            activeButtons.forEach(btn => {
+                if (btn.classList.contains('tab-btn')) {
+                    btn.classList.remove('border-transparent', 'text-gray-500');
+                    btn.classList.add('border-blue-600', 'text-blue-600');
+                }
+            });
+        }
+
+        // Jobs Tab Navigation
+        function showJobsTab(tabName) {
+            // Hide all job tab contents
+            const jobTabContents = document.querySelectorAll('.job-tab-content');
+            jobTabContents.forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            // Reset all job tab buttons
+            const jobTabButtons = document.querySelectorAll('.job-tab-btn');
+            jobTabButtons.forEach(btn => {
+                btn.classList.remove('border-blue-600', 'text-blue-600');
+                btn.classList.add('border-transparent', 'text-gray-500');
+            });
+            
+            // Show selected tab
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.style.display = 'block';
+            }
+            
+            // Highlight active button
+            const activeButton = document.getElementById(`${tabName}-btn`);
+            if (activeButton) {
+                activeButton.classList.remove('border-transparent', 'text-gray-500');
+                activeButton.classList.add('border-blue-600', 'text-blue-600');
+            }
+        }
+
+        // UC03 - Assistente Acadêmico
+        function sendMessage(event) {
+            event.preventDefault();
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (!message) {
+                showNotification('O campo de mensagem não pode estar vazio', 'error');
+                return;
+            }
+            
+            addMessageToChat(message, 'user');
+            input.value = '';
+            
+            setTimeout(() => {
+                const response = generateAIResponse(message);
+                addMessageToChat(response, 'assistant');
+            }, 1000);
+        }
+
+        function quickQuestion(question) {
+            document.getElementById('chat-input').value = question;
+            const event = { preventDefault: () => {} };
+            sendMessage(event);
+        }
+
+        function addMessageToChat(message, sender) {
+            const container = document.getElementById('chat-container');
+            const messageDiv = document.createElement('div');
+            
+            if (sender === 'user') {
+                messageDiv.className = 'flex items-start space-x-3 mb-4 justify-end';
+                messageDiv.innerHTML = `
+                    <div class="bg-blue-600 text-white rounded-lg p-3 shadow-sm max-w-md">
+                        <p class="text-sm">${message}</p>
+                    </div>
+                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span class="text-blue-600 text-sm">👤</span>
+                    </div>
+                `;
+            } else {
+                messageDiv.className = 'flex items-start space-x-3 mb-4';
+                messageDiv.innerHTML = `
+                    <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm">🤖</span>
+                    </div>
+                    <div class="bg-white rounded-lg p-3 shadow-sm max-w-md">
+                        <p class="text-sm">${message}</p>
+                    </div>
+                `;
+            }
+            
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function generateAIResponse(question) {
+            const responses = {
+                'qual minha avaliação geral?': 'Sua avaliação geral atual é A (Atendido). Você está com um excelente desempenho acadêmico! 📊 Você tem 12 disciplinas cursadas com aprovação em todas elas.',
+                'quando é minha próxima prova?': 'Sua próxima prova é hoje às 14:00 - Prova de Redes de Computadores na Sala 201. 📅 Não se esqueça de levar documento com foto!',
+                'quantos créditos tenho?': 'Você já concluiu 180 créditos do seu curso. 🎓 Parabéns pelo progresso! Restam apenas 60 créditos para a conclusão do curso.',
+                'default': 'Entendi sua pergunta. Com base nos seus dados acadêmicos, posso ajudá-lo com informações sobre avaliações, horários e disciplinas. Se precisar de algo mais específico, entre em contato com a secretaria.'
+            };
+            
+            const key = question.toLowerCase();
+            return responses[key] || responses['default'];
+        }
+
+        // UC04 - Vagas de Estágio
+        function applyToJob(position, company) {
+            showNotification('Processando candidatura...', 'info');
+            
+            setTimeout(() => {
+                showNotification(`Candidatura enviada com sucesso para ${position} na ${company}!`);
+            }, 2000);
+        }
+
+        function startInterview() {
+            showNotification('Simulador de entrevista em desenvolvimento!', 'info');
+        }
+
+        function viewJobDetails(jobId) {
+            const job = jobsDatabase[jobId];
+            if (!job) return;
+            
+            // Store current job for potential selection
+            selectedJobData = job;
+            
+            // Populate modal content
+            const detailsContent = document.getElementById('job-details-content');
+            detailsContent.innerHTML = `
+                <!-- Cabeçalho da Vaga -->
+                <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-200">
+                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                        <div class="flex-1">
+                            <h4 class="text-2xl font-bold text-gray-900 mb-2">${job.title}</h4>
+                            <p class="text-lg text-gray-700 mb-3">🏢 ${job.company}</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">${job.type}</span>
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">${job.mode}</span>
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">${job.area}</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-green-600 mb-1">${job.salary}</div>
+                            <div class="text-sm text-gray-500">Bolsa mensal</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grid de Informações -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Descrição -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-6">
+                        <h5 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                            📝 Descrição da Vaga
+                        </h5>
+                        <p class="text-gray-700 leading-relaxed">${job.description}</p>
+                    </div>
+
+                    <!-- Requisitos -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-6">
+                        <h5 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                            ✅ Requisitos
+                        </h5>
+                        <p class="text-gray-700 leading-relaxed">${job.requirements}</p>
+                    </div>
+
+                    <!-- Benefícios -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-6">
+                        <h5 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                            🎁 Benefícios
+                        </h5>
+                        <p class="text-gray-700 leading-relaxed">${job.benefits}</p>
+                    </div>
+
+                    <!-- Link e Informações Adicionais -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-6">
+                        <h5 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                            🔗 Como se Candidatar
+                        </h5>
+                        <div class="space-y-3">
+                            <p class="text-gray-700">Acesse o link oficial da vaga:</p>
+                            <a href="${job.link}" target="_blank" rel="noopener noreferrer" 
+                               class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                                🌐 Acessar Vaga
+                                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informações Extras -->
+                <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                    <h5 class="text-lg font-semibold text-gray-900 mb-4">📊 Informações Adicionais</h5>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                        <div class="text-center p-3 bg-white rounded-lg">
+                            <div class="font-medium text-gray-900">Modalidade</div>
+                            <div class="text-gray-600 mt-1">${job.mode}</div>
+                        </div>
+                        <div class="text-center p-3 bg-white rounded-lg">
+                            <div class="font-medium text-gray-900">Nível</div>
+                            <div class="text-gray-600 mt-1">${job.type}</div>
+                        </div>
+                        <div class="text-center p-3 bg-white rounded-lg">
+                            <div class="font-medium text-gray-900">Área</div>
+                            <div class="text-gray-600 mt-1">${job.area}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Show modal
+            document.getElementById('job-details-modal').classList.add('show');
+        }
+
+        function closeJobDetailsModal() {
+            document.getElementById('job-details-modal').classList.remove('show');
+        }
+
+        function selectJobFromDetails() {
+            if (!selectedJobData) {
+                showNotification('Erro: Nenhuma vaga selecionada', 'error');
+                return;
+            }
+            
+            // Close details modal
+            closeJobDetailsModal();
+            
+            // Open notification modal
+            setTimeout(() => {
+                selectJobToNotify(Object.keys(jobsDatabase).find(key => jobsDatabase[key] === selectedJobData));
+            }, 300);
+        }
+
+        function selectJobToNotify(jobId) {
+            selectedJobData = jobsDatabase[jobId];
+            if (!selectedJobData) return;
+            
+            // Populate modal with job information
+            const jobInfoContainer = document.getElementById('selected-job-info');
+            jobInfoContainer.innerHTML = `
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex-1">
+                        <h4 class="text-lg font-semibold text-gray-900">${selectedJobData.title}</h4>
+                        <p class="text-sm text-gray-600">${selectedJobData.company}</p>
+                        <div class="flex items-center space-x-2 mt-2">
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">${selectedJobData.type}</span>
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">${selectedJobData.mode}</span>
+                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">${selectedJobData.area}</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm font-medium text-gray-900">${selectedJobData.salary}</p>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-700">${selectedJobData.description}</p>
+            `;
+            
+            // Show modal
+            document.getElementById('job-notification-modal').classList.add('show');
+        }
+
+        function closeJobNotificationModal() {
+            document.getElementById('job-notification-modal').classList.remove('show');
+            
+            // Reset form
+            document.getElementById('custom-message').value = '';
+            document.getElementById('modal-notify-all').checked = false;
+            const checkboxes = document.querySelectorAll('input[name="modal-classes"]');
+            checkboxes.forEach(cb => cb.checked = false);
+            
+            selectedJobData = null;
+        }
+
+        function toggleAllModalClasses() {
+            const notifyAll = document.getElementById('modal-notify-all');
+            const classCheckboxes = document.querySelectorAll('input[name="modal-classes"]');
+            
+            classCheckboxes.forEach(checkbox => {
+                checkbox.checked = notifyAll.checked;
+            });
+        }
+
+        function confirmJobNotification() {
+            if (!selectedJobData) {
+                showNotification('Erro: Nenhuma vaga selecionada', 'error');
+                return;
+            }
+            
+            // Check if "Todas as turmas" is selected OR at least one specific class is selected
+            const notifyAll = document.getElementById('modal-notify-all').checked;
+            const selectedClasses = document.querySelectorAll('input[name="modal-classes"]:checked');
+            
+            if (!notifyAll && selectedClasses.length === 0) {
+                showNotification('Selecione pelo menos uma turma para notificar', 'error');
+                return;
+            }
+            
+            const customMessage = document.getElementById('custom-message').value.trim();
+            
+            showNotification('Notificando alunos sobre a vaga...', 'info');
+            
+            setTimeout(() => {
+                let classNames = '';
+                let studentsCount = 0;
+                
+                if (notifyAll) {
+                    classNames = 'Todas as turmas';
+                    studentsCount = 78; // Total students across all classes
+                } else {
+                    const classLabels = Array.from(selectedClasses).map(cb => {
+                        const label = cb.parentElement.querySelector('span').textContent;
+                        return label;
+                    });
+                    classNames = classLabels.join(', ');
+                    studentsCount = selectedClasses.length * 13; // Approximate students per class
+                }
+                
+                // Update the notification history in the professor vagas tab
+                updateNotificationHistory(selectedJobData.title, classNames, studentsCount);
+                
+                showNotification(`Vaga "${selectedJobData.title}" notificada com sucesso!`);
+                
+                setTimeout(() => {
+                    showNotification(`📊 ${studentsCount} alunos notificados em: ${classNames}`, 'info');
+                }, 1500);
+                
+                closeJobNotificationModal();
+            }, 2000);
+        }
+
+        function updateNotificationHistory(jobTitle, classNames, studentsCount) {
+            // Find the notification history container
+            const historyContainer = document.querySelector('#professor-vagas .space-y-3');
+            if (!historyContainer) return;
+            
+            // Get current time
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            
+            // Create new notification entry
+            const newNotification = document.createElement('div');
+            newNotification.className = 'p-3 bg-green-50 border border-green-200 rounded-lg';
+            newNotification.innerHTML = `
+                <div class="flex justify-between items-start mb-1">
+                    <h5 class="text-sm font-medium text-gray-900">${jobTitle}</h5>
+                    <span class="text-xs text-gray-500">Hoje, ${timeString}</span>
+                </div>
+                <p class="text-xs text-gray-600">Notificado para: ${classNames}</p>
+                <p class="text-xs text-green-600 mt-1">✅ ${studentsCount} alunos notificados</p>
+            `;
+            
+            // Insert at the beginning of the history
+            historyContainer.insertBefore(newNotification, historyContainer.firstChild);
+            
+            // Keep only the last 3 notifications
+            const notifications = historyContainer.children;
+            while (notifications.length > 3) {
+                historyContainer.removeChild(notifications[notifications.length - 1]);
+            }
+            
+            // Update statistics
+            updateNotificationStats();
+        }
+
+        function updateNotificationStats() {
+            // Update the statistics in the professor vagas tab
+            const statsContainer = document.querySelector('#professor-vagas .space-y-2');
+            if (!statsContainer) return;
+            
+            // Get current counts and increment
+            const todaySpan = statsContainer.children[1].querySelector('.text-green-600');
+            const weekSpan = statsContainer.children[2].querySelector('.text-purple-600');
+            
+            if (todaySpan && weekSpan) {
+                const currentToday = parseInt(todaySpan.textContent) || 0;
+                const currentWeek = parseInt(weekSpan.textContent) || 0;
+                
+                todaySpan.textContent = currentToday + 1;
+                weekSpan.textContent = currentWeek + 1;
+            }
+        }
+
+        // UC05 - Certificados
+        function generateCertificate(course) {
+            showNotification('Gerando certificado...', 'info');
+            
+            setTimeout(() => {
+                const link = document.createElement('a');
+                link.href = 'data:application/pdf;base64,JVBERi0xLjQKJdPr6eEKMSAwIG9iago8PAovVGl0bGUgKENlcnRpZmljYWRvKQovQ3JlYXRvciAoUG9ydGFsIEFjYWTqbWljbykKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDMgMCBSCj4+CmVuZG9iagozIDAgb2JqCjw8Ci9UeXBlIC9QYWdlcwovS2lkcyBbNCAwIFJdCi9Db3VudCAxCj4+CmVuZG9iago0IDAgb2JqCjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMyAwIFIKL01lZGlhQm94IFswIDAgNjEyIDc5Ml0KPj4KZW5kb2JqCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDc0IDAwMDAwIG4gCjAwMDAwMDAxMjEgMDAwMDAgbiAKMDAwMDAwMDE3OCAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9TaXplIDUKL1Jvb3QgMiAwIFIKPj4Kc3RhcnR4cmVmCjI3MwolJUVPRg==';
+                link.download = `Certificado_${course.replace(/\s+/g, '_')}.pdf`;
+                link.click();
+                
+                showNotification(`Certificado de ${course} baixado com sucesso!`);
+            }, 1500);
+        }
+
+        function checkPaymentStatus() {
+            showNotification('Verificando status de pagamentos...', 'info');
+            
+            setTimeout(() => {
+                showNotification('Pendência encontrada: Mensalidade de outubro/2024. Entre em contato com a secretaria.', 'error');
+            }, 2000);
+        }
+
+        // UC07 - Professor Grade Management
+        function loadStudents() {
+            const subject = document.getElementById('professor-subject').value;
+            const classId = document.getElementById('professor-class').value;
+            const assessmentType = document.getElementById('assessment-type').value;
+            
+            if (!subject || !classId) {
+                showNotification('Selecione disciplina e turma', 'error');
+                return;
+            }
+            
+            // Show loading state
+            const studentsList = document.getElementById('students-list');
+            const saveSection = document.getElementById('save-section');
+            
+            studentsList.innerHTML = `
+                <div class="text-center text-gray-500 py-8">
+                    <div class="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+                    <p>Carregando alunos...</p>
+                </div>
+            `;
+            
+            showNotification('Carregando alunos...', 'info');
+            
+            setTimeout(() => {
+                const studentsCount = document.getElementById('students-count');
+                
+                // Simulate different students based on subject and class
+                const studentsBySubject = {
+                    'algoritmos': [
+                        { id: 1, name: 'Ana Silva', matricula: '2024001', currentGrade: assessmentType === 'p1' ? 'A - Atendido' : assessmentType === 'p2' ? 'A - Atendido' : assessmentType === 'trabalho' ? 'A - Atendido' : '95%' },
+                        { id: 2, name: 'Bruno Santos', matricula: '2024002', currentGrade: assessmentType === 'p1' ? 'PA - Parcialmente Atendido' : assessmentType === 'p2' ? 'A - Atendido' : assessmentType === 'trabalho' ? 'A - Atendido' : '88%' },
+                        { id: 3, name: 'Carlos Oliveira', matricula: '2024003', currentGrade: assessmentType === 'p1' ? 'A - Atendido' : assessmentType === 'p2' ? 'PA - Parcialmente Atendido' : assessmentType === 'trabalho' ? 'A - Atendido' : '92%' },
+                        { id: 4, name: 'Diana Costa', matricula: '2024004', currentGrade: assessmentType === 'p1' ? 'PA - Parcialmente Atendido' : assessmentType === 'p2' ? 'A - Atendido' : assessmentType === 'trabalho' ? 'PA - Parcialmente Atendido' : '85%' },
+                        { id: 5, name: 'Eduardo Lima', matricula: '2024005', currentGrade: assessmentType === 'p1' ? 'NA - Não Atendido' : assessmentType === 'p2' ? 'PA - Parcialmente Atendido' : assessmentType === 'trabalho' ? 'A - Atendido' : '78%' }
+                    ],
+                    'banco': [
+                        { id: 6, name: 'Fernanda Rocha', matricula: '2024006', currentGrade: assessmentType === 'p1' ? 'PA - Parcialmente Atendido' : assessmentType === 'p2' ? 'A - Atendido' : assessmentType === 'trabalho' ? 'A - Atendido' : '90%' },
+                        { id: 7, name: 'Gabriel Mendes', matricula: '2024007', currentGrade: assessmentType === 'p1' ? 'A - Atendido' : assessmentType === 'p2' ? 'A - Atendido' : assessmentType === 'trabalho' ? 'A - Atendido' : '95%' },
+                        { id: 8, name: 'Helena Cardoso', matricula: '2024008', currentGrade: assessmentType === 'p1' ? 'A - Atendido' : assessmentType === 'p2' ? 'PA - Parcialmente Atendido' : assessmentType === 'trabalho' ? 'A - Atendido' : '87%' },
+                        { id: 9, name: 'Igor Ferreira', matricula: '2024009', currentGrade: assessmentType === 'p1' ? 'PA - Parcialmente Atendido' : assessmentType === 'p2' ? 'A - Atendido' : assessmentType === 'trabalho' ? 'PA - Parcialmente Atendido' : '82%' }
+                    ],
+                    'engenharia': [
+                        { id: 10, name: 'Julia Nascimento', matricula: '2024010', currentGrade: assessmentType === 'p1' ? 'PA - Parcialmente Atendido' : assessmentType === 'p2' ? 'PA - Parcialmente Atendido' : assessmentType === 'trabalho' ? 'A - Atendido' : '80%' },
+                        { id: 11, name: 'Kevin Alves', matricula: '2024011', currentGrade: assessmentType === 'p1' ? 'A - Atendido' : assessmentType === 'p2' ? 'A - Atendido' : assessmentType === 'trabalho' ? 'A - Atendido' : '93%' },
+                        { id: 12, name: 'Larissa Moura', matricula: '2024012', currentGrade: assessmentType === 'p1' ? 'PA - Parcialmente Atendido' : assessmentType === 'p2' ? 'A - Atendido' : assessmentType === 'trabalho' ? 'A - Atendido' : '88%' }
+                    ],
+                    'redes': [
+                        { id: 13, name: 'Marcos Pereira', matricula: '2024013', currentGrade: assessmentType === 'p1' ? 'PA - Parcialmente Atendido' : assessmentType === 'p2' ? '' : assessmentType === 'trabalho' ? '' : '78%' },
+                        { id: 14, name: 'Natalia Souza', matricula: '2024014', currentGrade: assessmentType === 'p1' ? 'A - Atendido' : assessmentType === 'p2' ? '' : assessmentType === 'trabalho' ? '' : '85%' },
+                        { id: 15, name: 'Otavio Ribeiro', matricula: '2024015', currentGrade: assessmentType === 'p1' ? 'PA - Parcialmente Atendido' : assessmentType === 'p2' ? '' : assessmentType === 'trabalho' ? '' : '72%' }
+                    ]
+                };
+                
+                const students = studentsBySubject[subject] || [];
+                
+                if (students.length === 0) {
+                    studentsList.innerHTML = `
+                        <div class="text-center text-gray-500 py-8">
+                            <p>Nenhum aluno encontrado para esta disciplina e turma.</p>
+                        </div>
+                    `;
+                    saveSection.style.display = 'none';
+                    return;
+                }
+                
+                let studentsHTML = '';
+                students.forEach(student => {
+                    if (assessmentType === 'frequencia') {
+                        // Simulate last attendance status
+                        const lastAttendanceOptions = ['Presente', 'Ausente'];
+                        const lastAttendance = lastAttendanceOptions[Math.floor(Math.random() * lastAttendanceOptions.length)];
+                        const lastAttendanceColor = lastAttendance === 'Presente' ? 'text-green-600' : 'text-red-600';
+                        const lastAttendanceIcon = lastAttendance === 'Presente' ? '✅' : '❌';
+                        
+                        studentsHTML += `
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors">
+                                <div class="flex-1">
+                                    <h4 class="font-medium text-gray-900">${student.name}</h4>
+                                    <p class="text-sm text-gray-600">Matrícula: ${student.matricula}</p>
+                                    <div class="flex items-center mt-1">
+                                        <span class="text-xs text-gray-500 mr-2">Última aula:</span>
+                                        <span class="text-xs ${lastAttendanceColor} font-medium flex items-center">
+                                            ${lastAttendanceIcon} ${lastAttendance}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="text-sm text-gray-600 min-w-20">
+                                        Frequência: <span class="font-medium">${student.currentGrade || 'N/A'}</span>
+                                    </div>
+                                    <select 
+                                        id="grade-${student.id}"
+                                        class="w-28 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                                    >
+                                        <option value="">Selecione</option>
+                                        <option value="Presente">✅ Presente</option>
+                                        <option value="Ausente">❌ Ausente</option>
+                                    </select>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        const currentGradeValue = student.currentGrade ? student.currentGrade.split(' ')[0] : '';
+                        studentsHTML += `
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors">
+                                <div class="flex-1">
+                                    <h4 class="font-medium text-gray-900">${student.name}</h4>
+                                    <p class="text-sm text-gray-600">Matrícula: ${student.matricula}</p>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="text-sm text-gray-600 min-w-32">
+                                        Atual: <span class="font-medium">${student.currentGrade || 'N/A'}</span>
+                                    </div>
+                                    <select 
+                                        id="grade-${student.id}"
+                                        class="w-40 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                                    >
+                                        <option value="">Selecione</option>
+                                        <option value="A" ${currentGradeValue === 'A' ? 'selected' : ''}>A - Atendido</option>
+                                        <option value="PA" ${currentGradeValue === 'PA' ? 'selected' : ''}>PA - Parcialmente Atendido</option>
+                                        <option value="NA" ${currentGradeValue === 'NA' ? 'selected' : ''}>NA - Não Atendido</option>
+                                    </select>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                studentsList.innerHTML = studentsHTML;
+                saveSection.style.display = 'block';
+                studentsCount.textContent = students.length;
+                
+                showNotification(`${students.length} alunos carregados com sucesso!`);
+            }, 1200);
+        }
+
+        function saveGrades() {
+            // Collect all grade inputs
+            const gradeInputs = document.querySelectorAll('#students-list input[id^="grade-"], #students-list select[id^="grade-"]');
+            const assessmentType = document.getElementById('assessment-type').value;
+            const subject = document.getElementById('professor-subject').value;
+            const classId = document.getElementById('professor-class').value;
+            
+            // Check for changes by comparing current values with original values
+            let hasChanges = false;
+            const grades = [];
+            
+            gradeInputs.forEach(input => {
+                const value = input.value.trim();
+                const currentGradeSpan = input.closest('.flex').querySelector('.text-gray-600 span.font-medium');
+                const currentValue = currentGradeSpan ? currentGradeSpan.textContent : '';
+                
+                // Check if there's a new value entered
+                if (value) {
+                    let isChanged = false;
+                    
+                    if (assessmentType === 'frequencia') {
+                        // For frequency, just check if a new attendance value was selected
+                        isChanged = value !== '' && (value === 'Presente' || value === 'Ausente');
+                    } else {
+                        // For grades, compare grade codes
+                        const gradeMap = {
+                            'A': 'A - Atendido',
+                            'PA': 'PA - Parcialmente Atendido', 
+                            'NA': 'NA - Não Atendido'
+                        };
+                        const newGradeText = gradeMap[value] || value;
+                        isChanged = newGradeText !== currentValue && currentValue !== 'N/A';
+                    }
+                    
+                    if (isChanged || currentValue === 'N/A' || currentValue === '') {
+                        hasChanges = true;
+                        const studentId = input.id.replace('grade-', '');
+                        const studentName = input.closest('.flex').querySelector('h4').textContent;
+                        grades.push({
+                            studentId,
+                            studentName,
+                            grade: value,
+                            assessmentType,
+                            previousValue: currentValue
+                        });
+                    }
+                }
+            });
+            
+            if (!hasChanges) {
+                showNotification('Nenhuma alteração foi detectada para salvar', 'warning');
+                return;
+            }
+            
+            // Show loading state on save button
+            const saveButton = document.querySelector('#save-section button');
+            const originalText = saveButton.textContent;
+            saveButton.disabled = true;
+            saveButton.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Salvando...
+            `;
+            
+            showNotification(`Salvando ${grades.length} alteração(ões)...`, 'info');
+            
+            // Simulate save operation with very low error rate
+            const shouldError = Math.random() < 0.05;
+            
+            setTimeout(() => {
+                // Restore button state
+                saveButton.disabled = false;
+                saveButton.textContent = originalText;
+                
+                if (shouldError) {
+                    showNotification('Erro ao salvar os dados. Tente novamente.', 'error');
+                } else {
+                    // Update the "Atual" values to reflect the saved grades
+                    grades.forEach(gradeData => {
+                        const input = document.getElementById(`grade-${gradeData.studentId}`);
+                        if (input) {
+                            const currentGradeSpan = input.closest('.flex').querySelector('.text-gray-600 span.font-medium');
+                            if (currentGradeSpan) {
+                                if (assessmentType === 'frequencia') {
+                                    // For attendance, we don't update the frequency percentage, just show confirmation
+                                    // The frequency percentage is calculated separately by the system
+                                } else {
+                                    const gradeText = {
+                                        'A': 'A - Atendido',
+                                        'PA': 'PA - Parcialmente Atendido',
+                                        'NA': 'NA - Não Atendido'
+                                    }[gradeData.grade] || gradeData.grade;
+                                    currentGradeSpan.textContent = gradeText;
+                                }
+                            }
+                            
+                            // Clear the input after saving
+                            input.value = '';
+                            if (input.tagName === 'SELECT') {
+                                input.selectedIndex = 0;
+                            }
+                        }
+                    });
+                    
+                    showNotification(`✅ ${grades.length} alteração(ões) salva(s) com sucesso!`);
+                    
+                    // Show detailed summary
+                    const assessmentNames = {
+                        'p1': 'Prova 1',
+                        'p2': 'Prova 2', 
+                        'trabalho': 'Trabalho',
+                        'frequencia': 'Frequência'
+                    };
+                    
+                    const subjectNames = {
+                        'algoritmos': 'Algoritmos e Programação',
+                        'banco': 'Banco de Dados',
+                        'engenharia': 'Engenharia de Software',
+                        'redes': 'Redes de Computadores'
+                    };
+                    
+                    setTimeout(() => {
+                        const studentsNames = grades.map(g => g.studentName).join(', ');
+                        showNotification(`📊 ${assessmentNames[assessmentType]} atualizada em ${subjectNames[subject]} para: ${studentsNames}`, 'info');
+                    }, 1500);
+                }
+            }, 1800);
+        }
+
+        // Other Professor Functions
+        function editEvent(eventId) {
+            showNotification('Função de edição em desenvolvimento', 'info');
+        }
+
+        function deleteEvent(eventId) {
+            const userConfirmed = window.confirm('Tem certeza que deseja excluir este evento?');
+            if (userConfirmed) {
+                showNotification('Evento excluído com sucesso!');
+            }
+        }
+
+        function clearFilters() {
+            document.getElementById('feedback-filter-subject').value = '';
+            document.getElementById('feedback-filter-type').value = '';
+            document.getElementById('feedback-filter-status').value = '';
+            showNotification('Filtros limpos!', 'info');
+        }
+
+        function respondFeedback(feedbackId) {
+            const response = window.prompt('Digite sua resposta ao feedback:');
+            if (response && response.trim()) {
+                showNotification('Resposta enviada com sucesso!');
+            }
+        }
+
+        function markAsAnalyzing(feedbackId) {
+            showNotification('Feedback marcado como "Em análise"');
+        }
+
+        function markAsResolved(feedbackId) {
+            showNotification('Feedback marcado como "Resolvido"');
+        }
+
+        // NOTIFICATION SYSTEM
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('notification-container');
+            const notification = document.createElement('div');
+            
+            const bgColor = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500',
+                warning: 'bg-yellow-500'
+            }[type] || 'bg-green-500';
+            
+            const icon = {
+                success: '✅',
+                error: '❌',
+                info: 'ℹ️',
+                warning: '⚠️'
+            }[type] || '✅';
+            
+            notification.className = `notification ${bgColor} text-white px-6 py-4 rounded-lg shadow-lg mb-4 flex items-center space-x-3 max-w-md`;
+            notification.innerHTML = `
+                <span class="text-lg">${icon}</span>
+                <span class="flex-1">${message}</span>
+                <button onclick="this.parentElement.remove()" class="text-white hover:text-gray-200 font-bold text-xl">×</button>
+            `;
+            
+            container.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // FORM HANDLERS
+        document.addEventListener('DOMContentLoaded', function() {
+            // Login form handler
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    
+                    const loginId = document.getElementById('login-id').value.trim();
+                    const password = document.getElementById('password').value.trim();
+                    const rememberMe = document.getElementById('remember-me').checked;
+                    
+                    if (!loginId || !password) {
+                        showNotification('Por favor, preencha todos os campos', 'error');
+                        return;
+                    }
+                    
+                    showLoadingState(true);
+                    
+                    setTimeout(() => {
+                        const isValid = validateCredentials(loginId, password, selectedUserType);
+                        
+                        if (isValid) {
+                            showNotification('Login realizado com sucesso!', 'success');
+                            
+                            currentUser = {
+                                type: selectedUserType,
+                                id: loginId,
+                                name: selectedUserType === 'student' ? 'João Silva' : 'Prof. Maria Santos'
+                            };
+                            
+                            if (rememberMe) {
+                                localStorage.setItem('userData', JSON.stringify(currentUser));
+                            } else {
+                                sessionStorage.setItem('userData', JSON.stringify(currentUser));
+                            }
+                            
+                            setTimeout(() => {
+                                showLoadingState(false);
+                                showPortal();
+                            }, 1000);
+                        } else {
+                            showLoadingState(false);
+                            showNotification('Credenciais inválidas. Tente novamente.', 'error');
+                        }
+                    }, 2000);
+                });
+            }
+
+            // Chat form handler
+            const chatForm = document.getElementById('chat-form');
+            if (chatForm) {
+                chatForm.addEventListener('submit', sendMessage);
+            }
+
+            // Feedback form handler
+            const feedbackForm = document.getElementById('feedback-form');
+            if (feedbackForm) {
+                feedbackForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    
+                    const type = document.getElementById('feedback-type').value;
+                    const subject = document.getElementById('feedback-subject').value;
+                    const message = document.getElementById('feedback-message').value.trim();
+                    const anonymous = document.getElementById('feedback-anonymous').checked;
+                    
+                    if (!message) {
+                        showNotification('Por favor, digite sua mensagem', 'error');
+                        return;
+                    }
+                    
+                    showNotification('Enviando feedback...', 'info');
+                    
+                    setTimeout(() => {
+                        showNotification('Feedback enviado com sucesso!');
+                        feedbackForm.reset();
+                    }, 1500);
+                });
+            }
+
+            // Forgot password form handler
+            const forgotForm = document.getElementById('forgot-form');
+            if (forgotForm) {
+                forgotForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    
+                    const forgotId = document.getElementById('forgot-id').value.trim();
+                    
+                    if (!forgotId) {
+                        showNotification('Por favor, digite sua matrícula ou código', 'error');
+                        return;
+                    }
+                    
+                    showNotification('Enviando instruções...', 'info');
+                    
+                    setTimeout(() => {
+                        showNotification('Instruções enviadas para seu email!');
+                        closeForgotPassword();
+                        document.getElementById('forgot-form').reset();
+                    }, 2000);
+                });
+            }
+
+            // Event form handler
+            const eventForm = document.getElementById('event-form');
+            if (eventForm) {
+                eventForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    
+                    const title = document.getElementById('event-title').value.trim();
+                    const date = document.getElementById('event-date').value;
+                    const time = document.getElementById('event-time').value;
+                    const location = document.getElementById('event-location').value.trim();
+                    
+                    if (!title || !date || !time || !location) {
+                        showNotification('Por favor, preencha todos os campos obrigatórios', 'error');
+                        return;
+                    }
+                    
+                    showNotification('Criando evento...', 'info');
+                    
+                    setTimeout(() => {
+                        showNotification('Evento criado com sucesso!');
+                        eventForm.reset();
+                    }, 1500);
+                });
+            }
+
+            // Initialize user type selection
+            selectUserType('student');
+        });
+
+        // UTILITY FUNCTIONS
+        function validateCredentials(loginId, password, userType) {
+            const validCredentials = {
+                student: {
+                    '2024001': 'senha123'
+                },
+                professor: {
+                    'prof001': 'prof123'
+                }
+            };
+            
+            return validCredentials[userType] && validCredentials[userType][loginId] === password;
+        }
+
+        function showLoadingState(show) {
+            const loginBtn = document.getElementById('login-btn');
+            const loginText = document.getElementById('login-text');
+            const loginLoading = document.getElementById('login-loading');
+            
+            if (show) {
+                loginBtn.disabled = true;
+                loginText.classList.add('hidden');
+                loginLoading.classList.remove('hidden');
+            } else {
+                loginBtn.disabled = false;
+                loginText.classList.remove('hidden');
+                loginLoading.classList.add('hidden');
+            }
+        }
+
+        // Check for saved user data on page load
+        window.addEventListener('load', function() {
+            const savedUser = localStorage.getItem('userData') || sessionStorage.getItem('userData');
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    showPortal();
+                } catch (e) {
+                    console.error('Error parsing saved user data:', e);
+                }
+            }
+        });
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9967b9b6135acd97',t:'MTc2MTc5Mzg4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

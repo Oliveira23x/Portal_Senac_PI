@@ -1,0 +1,107 @@
+
+        body {
+            box-sizing: border-box;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .notification {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .loading {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        .login-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .floating-shape {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .input-focus:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
+        }
+        
+        .grade-card {
+            transition: all 0.3s ease;
+        }
+        
+        .grade-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        /* Modal styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Responsive modal */
+        @media (max-width: 768px) {
+            .modal-content {
+                padding: 1rem;
+                margin: 0.5rem;
+                max-width: calc(100vw - 1rem);
+            }
+        }
+    
+@view-transition { navigation: auto; }
+html,body{min-height:100%;margin:0}button,a,input,select,textarea{touch-action:manipulation}button:disabled{opacity:.55;cursor:not-allowed}button{min-height:40px}input,select,textarea{max-width:100%;min-width:0}textarea{resize:vertical}p,h1,h2,h3,h4,span{overflow-wrap:anywhere}main{width:100%}.modal.show{display:flex}.tab-content{display:none}.tab-content.active{display:block}.chat-message{white-space:pre-wrap;overflow-wrap:anywhere}.notification{max-width:min(26rem,calc(100vw - 2rem))}#notification-container{pointer-events:none}#notification-container>div{pointer-events:auto}.empty{padding:1rem;color:#64748b;background:#f8fafc;border-radius:.75rem}.grade-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,160px);gap:12px;align-items:center;padding:16px;border:1px solid #e2e8f0;border-radius:12px}.feedback-message{white-space:pre-wrap}.modal-content{width:100%}#chat-container{height:340px}#refresh-data{min-height:32px}@media(max-width:640px){header .flex.justify-between{flex-wrap:wrap;gap:12px}header h1{font-size:1.2rem}header .w-12{display:none}header .text-right{text-align:left}header .text-right p{max-width:190px}nav .space-x-8>:not([hidden])~:not([hidden]){margin-left:1rem}h2.text-3xl{font-size:1.5rem}#chat-form{flex-wrap:wrap;gap:8px}#chat-form button{margin-left:0}#chat-input{width:100%;flex-basis:100%}.grade-row{grid-template-columns:minmax(0,1fr)}.grade-row select{width:100%}.p-6{padding:1rem}.login-card{padding:1.25rem}}

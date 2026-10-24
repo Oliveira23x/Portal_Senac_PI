@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="pt-BR" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Acadêmico | Web e Android</title>
+  <link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/custom.css"><script src="/app.js" defer></script></head>
+ <body class="h-full bg-gradient-to-br from-blue-50 to-indigo-100 font-sans"><!-- LOGIN PAGE -->
+  <div id="login-page" class="min-h-full bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 relative overflow-hidden"><!-- Background Decorative Elements -->
+   <div class="absolute inset-0 overflow-hidden">
+    <div class="floating-shape absolute top-20 left-10 w-32 h-32 bg-white bg-opacity-10 rounded-full"></div>
+    <div class="floating-shape absolute top-40 right-20 w-24 h-24 bg-white bg-opacity-5 rounded-full" style="animation-delay: -2s;"></div>
+    <div class="floating-shape absolute bottom-32 left-1/4 w-40 h-40 bg-white bg-opacity-5 rounded-full" style="animation-delay: -4s;"></div>
+    <div class="floating-shape absolute bottom-20 right-10 w-20 h-20 bg-white bg-opacity-10 rounded-full" style="animation-delay: -1s;"></div>
+   </div><!-- Main Container -->
+   <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="max-w-md w-full space-y-8"><!-- Header -->
+     <div class="text-center fade-in">
+      <div class="mx-auto h-20 w-20 bg-white rounded-2xl shadow-2xl flex items-center justify-center mb-6"><span class="text-4xl">📚</span>
+      </div>
+      <h2 class="text-4xl font-bold text-white mb-2">Portal Acadêmico</h2>
+      <p class="text-blue-100 text-lg">Sistema de Gestão Estudantil</p>
+     </div><!-- Login Form -->
+     <div class="login-card rounded-2xl shadow-2xl p-8 border border-white border-opacity-20 fade-in" style="animation-delay: 0.2s;">
+      <form id="login-form" class="space-y-6"><!-- User Type Selection -->
+       <div><label class="block text-sm font-medium text-gray-700 mb-3">Tipo de Usuário</label>
+        <div class="grid grid-cols-2 gap-3"><button type="button" onclick="selectUserType('student')" id="student-type-btn" class="user-type-btn flex flex-col items-center p-4 border-2 border-blue-200 rounded-xl hover:border-blue-400 transition-all bg-blue-50 border-blue-500"> <span class="text-2xl mb-2">🎓</span> <span class="text-sm font-medium text-blue-700">Estudante</span> </button> <button type="button" onclick="selectUserType('professor')" id="professor-type-btn" class="user-type-btn flex flex-col items-center p-4 border-2 border-gray-200 rounded-xl hover:border-blue-400 transition-all"> <span class="text-2xl mb-2">👨‍🏫</span> <span class="text-sm font-medium text-gray-600">Professor</span> </button>
+        </div>
+       </div><!-- Login Fields -->
+       <div class="space-y-4">
+        <div><label for="login-id" class="block text-sm font-medium text-gray-700 mb-2"> <span id="login-label">Matrícula</span> </label>
+         <div class="relative"><input id="login-id" name="login-id" type="text" required class="input-focus appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" placeholder="Digite sua matrícula" autocomplete="username" maxlength="80">
+          <div class="absolute inset-y-0 right-0 pr-3 flex items-center"><span class="text-gray-400">👤</span>
+          </div>
+         </div>
+        </div>
+        <div><label for="password" class="block text-sm font-medium text-gray-700 mb-2">Senha</label>
+         <div class="relative"><input id="password" name="password" type="password" required class="input-focus appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" placeholder="Digite sua senha" autocomplete="current-password" maxlength="256"> <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center"> <span id="password-toggle" class="text-gray-400 hover:text-gray-600 cursor-pointer">👁️</span> </button>
+         </div>
+        </div>
+       </div><!-- Remember Me & Forgot Password -->
+       <div class="flex items-center justify-between">
+        <div class="flex items-center"><input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"> <label for="remember-me" class="ml-2 block text-sm text-gray-700"> Lembrar-me </label>
+        </div>
+        <div class="text-sm"><a href="#" onclick="showForgotPassword()" class="font-medium text-blue-600 hover:text-blue-500 transition-colors"> Esqueceu a senha? </a>
+        </div>
+       </div><!-- Login Button -->
+       <div><button type="submit" id="login-btn" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105 shadow-lg"> <span id="login-text">Entrar</span> <span id="login-loading" class="hidden">
+          <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle> <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg> Entrando... </span> </button>
+       </div><!-- Demo Credentials -->
+       <div class="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
+        <h4 class="text-sm font-medium text-gray-700 mb-2">Credenciais de Demonstração:</h4>
+        <div class="text-xs text-gray-600 space-y-1">
+         <div class="flex justify-between"><span>Estudante:</span> <span class="font-mono">2024001 / senha123</span>
+         </div>
+         <div class="flex justify-between"><span>Professor:</span> <span class="font-mono">prof001 / prof123</span>
+         </div>
+        </div><button type="button" onclick="fillDemoCredentials('student')" class="mt-2 text-xs text-blue-600 hover:text-blue-800 underline"> Usar credenciais de estudante </button>
+       </div>
+      </form>
+     </div><!-- Footer -->
+     <div class="text-center text-blue-100 text-sm fade-in" style="animation-delay: 0.4s;">
+      <p>Portal Acadêmico · Projeto de estudo</p>
+      <p class="mt-1">Desenvolvido para facilitar sua jornada acadêmica</p>
+     </div>
+    </div>
+   </div><!-- Forgot Password Modal -->
+   <div id="forgot-password-modal" class="modal">
+    <div class="modal-content max-w-md w-full">
+     <h3 class="text-2xl font-bold text-gray-900 mb-4">Recuperar Senha</h3>
+     <p class="text-gray-600 mb-6">Digite sua matrícula ou código de professor para receber instruções de recuperação.</p>
+     <form id="forgot-form">
+      <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2" for="forgot-id">Matrícula/Código</label> <input type="text" id="forgot-id" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Digite sua matrícula ou código">
+      </div>
+      <div class="flex space-x-3"><button type="button" onclick="closeForgotPassword()" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50"> Cancelar </button> <button type="submit" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700"> Enviar </button>
+      </div>
+     </form>
+    </div>
+   </div>
+  </div><!-- PORTAL PAGE -->
+  <div id="portal-page" class="min-h-full" style="display: none;"><!-- Header -->
+   <div class="bg-blue-50 border-b text-blue-800 text-sm px-4 py-2 text-center">Projeto de estudo · Dados e empresas fictícios <button id="refresh-data" class="underline ml-2">Atualizar dados</button></div><header class="bg-white shadow-lg border-b-4 border-blue-600">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="flex justify-between items-center py-4">
+      <div class="flex items-center space-x-4">
+       <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xl">📚</span>
+       </div>
+       <div>
+        <h1 class="text-2xl font-bold text-gray-900">Portal Acadêmico</h1>
+        <p class="text-sm text-gray-600">Sistema de Gestão Estudantil</p>
+       </div>
+      </div>
+      <div class="flex items-center space-x-4">
+       <div class="text-right">
+        <p id="user-name" class="text-sm font-medium text-gray-900">João Silva</p>
+        <p id="user-id" class="text-xs text-gray-600">Matrícula: 2024001</p>
+       </div>
+       <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center"><span id="user-avatar" class="text-blue-600 font-semibold">JS</span>
+       </div><button onclick="logout()" class="text-sm text-red-600 hover:text-red-800 font-medium"> Sair </button>
+      </div>
+     </div>
+    </div>
+   </header><!-- Navigation Tabs -->
+   <nav class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><!-- Student Tabs -->
+     <div id="student-tabs" class="flex space-x-8 overflow-x-auto"><button onclick="showTab('desempenho')" class="tab-btn py-4 px-2 border-b-2 border-blue-600 text-blue-600 font-medium whitespace-nowrap"> 📊 Desempenho </button> <button onclick="showTab('agenda')" class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"> 📅 Agenda </button> <button onclick="showTab('assistente')" class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"> 🤖 Assistente </button> <button onclick="showTab('vagas')" class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"> 💼 Vagas </button> <button onclick="showTab('certificados')" class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"> 🎓 Certificados </button> <button onclick="showTab('feedback')" class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"> 💬 Feedback </button>
+     </div><!-- Professor Tabs -->
+     <div id="professor-tabs" class="flex space-x-8 overflow-x-auto" style="display: none;"><button onclick="showTab('professor-desempenho')" class="tab-btn py-4 px-2 border-b-2 border-blue-600 text-blue-600 font-medium whitespace-nowrap"> 📊 Lançar Notas </button> <button onclick="showTab('professor-agenda')" class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"> 📅 Gerenciar Agenda </button> <button onclick="showTab('professor-feedback')" class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"> 💬 Feedbacks </button> <button onclick="showTab('professor-vagas')" class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"> 💼 Notificar Vagas </button>
+     </div>
+    </div>
+   </nav><!-- Main Content -->
+   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><!-- UC01 - Desempenho -->
+    <div id="desempenho" class="tab-content active fade-in"><div class="mb-6"><h2 class="text-3xl font-bold text-gray-900 mb-2">Meu Desempenho</h2><p class="text-gray-600">Notas e frequência consultadas no banco de dados.</p></div><div id="summary-cards" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6"></div><div id="attendance-alerts" class="space-y-3 mb-6"></div><section class="bg-white rounded-xl shadow-md p-6 min-w-0"><h3 class="text-xl font-semibold text-gray-900 mb-4">Avaliações e frequência</h3><div id="subject-cards" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section></div><!-- UC02 - Agenda -->
+    <div id="agenda" class="tab-content"><div class="mb-6"><h2 class="text-3xl font-bold text-gray-900 mb-2">Agenda Acadêmica</h2><p class="text-gray-600">Eventos das disciplinas e turmas em que você está matriculado.</p></div><section class="bg-white rounded-xl shadow-md p-6 min-w-0"><h3 class="text-xl font-semibold text-gray-900 mb-4">Eventos cadastrados</h3><div id="student-events" class="space-y-4"></div></section></div><!-- UC03 - Assistente -->
+    <div id="assistente" class="tab-content">
+     <div class="mb-6">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2">Assistente Acadêmico</h2>
+      <p class="text-gray-600">Respostas simples baseadas nos seus dados acadêmicos; sem IA generativa.</p>
+     </div>
+     <div class="bg-white rounded-xl shadow-md p-6">
+      <div id="chat-container" class="h-96 overflow-y-auto mb-4 p-4 bg-gray-50 rounded-lg">Pergunte sobre suas notas, frequência ou a próxima prova. Assistente com regras, sem IA generativa.</div>
+      <form id="chat-form" class="flex space-x-3"><input type="text" id="chat-input" placeholder="Digite sua dúvida aqui..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required maxlength="1000"> <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"> Enviar </button>
+      </form>
+      <div class="mt-4">
+       <p class="text-xs text-gray-500 mb-2">Perguntas frequentes:</p>
+       <div class="flex flex-wrap gap-2"><button onclick="quickQuestion('Qual minha avaliação geral?')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs hover:bg-gray-200"> Qual minha avaliação geral? </button> <button onclick="quickQuestion('Quando é minha próxima prova?')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs hover:bg-gray-200"> Próxima prova? </button> <button onclick="quickQuestion('Quantos créditos tenho?')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs hover:bg-gray-200"> Quantos créditos? </button>
+       </div>
+      </div>
+     </div>
+    </div><!-- UC04 - Vagas -->
+    <div id="vagas" class="tab-content"><div class="mb-6"><h2 class="text-3xl font-bold text-gray-900 mb-2">Vagas e Empregabilidade</h2><p class="text-gray-600">Vagas fictícias para estudo. O interesse fica registrado apenas neste portal.</p></div><section class="bg-white rounded-xl shadow-md p-6 min-w-0"><h3 class="text-xl font-semibold text-gray-900 mb-4">Avisos dos professores</h3><div id="student-notifications" class="space-y-3"></div></section><div class="my-6"><label for="job-search" class="block font-medium mb-2">Filtrar vagas</label><input id="job-search" class="w-full px-4 py-3 border rounded-xl" placeholder="Cargo, empresa ou modalidade"></div><div id="jobs-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div><div class="mt-6"><section class="bg-white rounded-xl shadow-md p-6 min-w-0"><h3 class="text-xl font-semibold text-gray-900 mb-4">Praticar entrevista</h3><p class="text-gray-600 mb-4">Roteiro de três perguntas para praticar por conta própria, sem nota automática.</p><button id="practice-button" class="px-4 py-2 bg-purple-600 text-white rounded-lg">Iniciar prática</button><div id="practice-section" class="hidden mt-4"><p id="practice-question" class="font-medium mb-3"></p><label for="practice-answer" class="block mb-2">Sua resposta</label><textarea id="practice-answer" rows="4" class="w-full border rounded-lg p-3"></textarea><button id="practice-next" class="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg">Próxima pergunta</button><p id="practice-progress" class="text-sm text-gray-600 mt-3"></p></div></section></div></div><!-- UC05 - Certificados -->
+    <div id="certificados" class="tab-content"><div class="mb-6"><h2 class="text-3xl font-bold text-gray-900 mb-2">Certificados e Declarações</h2><p class="text-gray-600">Documentos demonstrativos para testar o download de PDF.</p></div><section class="bg-white rounded-xl shadow-md p-6 min-w-0"><h3 class="text-xl font-semibold text-gray-900 mb-4">Declarações disponíveis</h3><p class="text-gray-600 mb-4">Neste exemplo: conceitos A em P1, P2 e trabalho, com frequência mínima de 75%. Cada escola deve definir suas regras reais.</p><div id="certificates-list" class="space-y-4"></div><p class="text-sm text-gray-500 mt-4">Os PDFs são fictícios e não substituem certificados institucionais. O sistema não possui módulo financeiro.</p></section></div><!-- UC06 - Feedback -->
+    <div id="feedback" class="tab-content"><div class="mb-6"><h2 class="text-3xl font-bold text-gray-900 mb-2">Feedback</h2><p class="text-gray-600">Envie uma mensagem e acompanhe a resposta do professor.</p></div><div class="grid grid-cols-1 lg:grid-cols-2 gap-6"><section class="bg-white rounded-xl shadow-md p-6 min-w-0"><h3 class="text-xl font-semibold text-gray-900 mb-4">Enviar feedback</h3><form id="feedback-form">
+        <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2" for="feedback-type">Tipo de Feedback</label> <select id="feedback-type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="sugestao">Sugestão</option> <option value="reclamacao">Reclamação</option> <option value="elogio">Elogio</option> <option value="duvida">Dúvida</option> </select>
+        </div>
+        <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2" for="feedback-subject">Disciplina (opcional)</label> <select id="feedback-subject" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="">Selecione uma disciplina</option> <option value="algoritmos">Algoritmos e Programação</option> <option value="banco">Banco de Dados</option> <option value="engenharia">Engenharia de Software</option> <option value="redes">Redes de Computadores</option> </select>
+        </div>
+        <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2" for="feedback-message">Mensagem</label> <textarea id="feedback-message" rows="6" placeholder="Descreva seu feedback detalhadamente..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required="" maxlength="4000"></textarea>
+        </div>
+        <div class="mb-4"><label class="flex items-center" for="feedback-anonymous"> <input type="checkbox" id="feedback-anonymous" class="mr-2"> <span class="text-sm text-gray-700">Enviar feedback anonimamente</span> </label>
+        </div><button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"> Enviar Feedback </button>
+       </form>
+      <p class="text-xs text-gray-500 mt-3">A opção anônima oculta seu nome para o professor. O vínculo permanece no banco para você acompanhar a resposta.</p></section><section class="bg-white rounded-xl shadow-md p-6 min-w-0"><h3 class="text-xl font-semibold text-gray-900 mb-4">Meus feedbacks</h3><div id="own-feedback" class="space-y-4"></div></section></div></div><!-- UC07 - Professor Desempenho -->
+    <div id="professor-desempenho" class="tab-content">
+     <div class="mb-6">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2">Lançar Avaliações e Frequência</h2>
+      <p class="text-gray-600">Gerencie o desempenho dos alunos em suas disciplinas</p>
+     </div>
+     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><!-- Seleção de Turma -->
+      <div class="bg-white rounded-xl shadow-md p-6">
+       <h3 class="text-xl font-semibold text-gray-900 mb-4">Selecionar Turma</h3>
+       <div class="space-y-4">
+        <div><label class="block text-sm font-medium text-gray-700 mb-2" for="professor-subject">Disciplina</label> <select id="professor-subject" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="">Selecione uma disciplina</option> <option value="algoritmos">Algoritmos e Programação</option> <option value="banco">Banco de Dados</option> <option value="engenharia">Engenharia de Software</option> <option value="redes">Redes de Computadores</option> </select>
+        </div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-2" for="professor-class">Turma</label> <select id="professor-class" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="">Selecione uma turma</option> <option value="turma-a">Turma A - Manhã</option> <option value="turma-b">Turma B - Noite</option> </select>
+        </div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-2">Avaliação</label> <select id="assessment-type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="p1">Prova 1</option> <option value="p2">Prova 2</option> <option value="trabalho">Trabalho</option> <option value="frequencia">Frequência</option> </select>
+        <div class="mt-4"><label for="lesson-date" class="block text-sm font-medium mb-2">Data da aula (para frequência)</label><input id="lesson-date" type="date" class="w-full border rounded-lg px-3 py-2"></div></div><button onclick="loadStudents()" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"> Carregar Alunos </button>
+       </div>
+      </div><!-- Lista de Alunos -->
+      <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+       <h3 class="text-xl font-semibold text-gray-900 mb-4">Lançamento de Avaliações</h3>
+       <div id="students-list" class="space-y-4">
+        <div class="text-center text-gray-500 py-8">
+         <p>Selecione uma disciplina e turma para carregar os alunos</p>
+        </div>
+       </div>
+       <div id="save-section" class="mt-6 pt-6 border-t" style="display: none;">
+        <div class="flex justify-between items-center">
+         <div class="text-sm text-gray-600"><span id="students-count">0</span> alunos carregados
+         </div><button onclick="saveGrades()" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"> Salvar Alterações </button>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- UC08 - Professor Agenda -->
+    <div id="professor-agenda" class="tab-content"><div class="mb-6"><h2 class="text-3xl font-bold text-gray-900 mb-2">Gerenciar Agenda</h2><p class="text-gray-600">Eventos salvos no banco e exibidos aos alunos da turma selecionada.</p></div><div class="grid grid-cols-1 lg:grid-cols-2 gap-6"><section class="bg-white rounded-xl shadow-md p-6 min-w-0"><h3 class="text-xl font-semibold text-gray-900 mb-4">Cadastrar ou editar evento</h3><form id="event-form">
+        <div class="space-y-4">
+         <div><label class="block text-sm font-medium text-gray-700 mb-2" for="event-type">Tipo de Evento</label> <select id="event-type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="aula">Aula</option> <option value="prova">Prova</option> <option value="trabalho">Trabalho</option> <option value="evento">Evento Especial</option> </select>
+         </div>
+         <div><label class="block text-sm font-medium text-gray-700 mb-2" for="event-title">Título</label> <input type="text" id="event-title" placeholder="Ex: Prova de Algoritmos" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required="">
+         </div>
+         <div><label class="block text-sm font-medium text-gray-700 mb-2" for="event-subject">Disciplina</label> <select id="event-subject" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="algoritmos">Algoritmos e Programação</option> <option value="banco">Banco de Dados</option> <option value="engenharia">Engenharia de Software</option> <option value="redes">Redes de Computadores</option> </select>
+         </div>
+         <div class="grid grid-cols-2 gap-4">
+          <div><label class="block text-sm font-medium text-gray-700 mb-2" for="event-date">Data</label> <input type="date" id="event-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required="">
+          </div>
+          <div><label class="block text-sm font-medium text-gray-700 mb-2" for="event-time">Horário</label> <input type="time" id="event-time" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required="">
+          </div>
+         </div>
+         <div><label class="block text-sm font-medium text-gray-700 mb-2" for="event-location">Local</label> <input type="text" id="event-location" placeholder="Ex: Sala 201, Laboratório 3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required="">
+         </div>
+         <div><label class="block text-sm font-medium text-gray-700 mb-2" for="event-class">Turma</label> <select id="event-class" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="turma-a">Turma A - Manhã</option> <option value="turma-b">Turma B - Noite</option> <option value="todas">Todas as Turmas</option> </select>
+         </div>
+         <div><label class="block text-sm font-medium text-gray-700 mb-2" for="event-description">Descrição (opcional)</label> <textarea id="event-description" rows="3" placeholder="Informações adicionais sobre o evento..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+         </div><button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"> Criar Evento </button>
+        </div>
+       </form>
+      <button id="cancel-event-edit" type="button" class="hidden mt-3 text-blue-600 underline">Cancelar edição</button></section><section class="bg-white rounded-xl shadow-md p-6 min-w-0"><h3 class="text-xl font-semibold text-gray-900 mb-4">Eventos cadastrados</h3><div id="professor-events" class="space-y-4"></div></section></div></div><!-- UC09 - Professor Feedback -->
+    <div id="professor-feedback" class="tab-content"><div class="mb-6"><h2 class="text-3xl font-bold text-gray-900 mb-2">Feedbacks dos Alunos</h2><p class="text-gray-600">Mensagens das disciplinas e turmas sob sua responsabilidade.</p></div><div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><section class="bg-white rounded-xl shadow-md p-6 min-w-0"><h3 class="text-xl font-semibold text-gray-900 mb-4">Filtros</h3><div class="space-y-4"><div><label class="block text-sm font-medium text-gray-700 mb-2" for="feedback-filter-subject">Disciplina</label> <select id="feedback-filter-subject" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="">Todas as disciplinas</option> <option value="algoritmos">Algoritmos e Programação</option> <option value="banco">Banco de Dados</option> <option value="engenharia">Engenharia de Software</option> <option value="redes">Redes de Computadores</option> </select>
+        </div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-2" for="feedback-filter-type">Tipo</label> <select id="feedback-filter-type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="">Todos os tipos</option> <option value="sugestao">Sugestões</option> <option value="reclamacao">Reclamações</option> <option value="elogio">Elogios</option> <option value="duvida">Dúvidas</option> </select>
+        </div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-2" for="feedback-filter-status">Status</label> <select id="feedback-filter-status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="">Todos os status</option> <option value="pendente">Pendentes</option> <option value="respondido">Respondidos</option> <option value="em-analise">Em análise</option> <option value="resolvido">Resolvidos</option></select>
+        </div><button onclick="clearFilters()" class="w-full px-4 py-2 bg-gray-600 text-white rounded-lg">Limpar filtros</button></div><div id="feedback-stats" class="mt-6 text-sm text-gray-600"></div></section><div class="lg:col-span-2"><section class="bg-white rounded-xl shadow-md p-6 min-w-0"><h3 class="text-xl font-semibold text-gray-900 mb-4">Mensagens recebidas</h3><div id="professor-feedback-list" class="space-y-4"></div></section></div></div></div><!-- UC10 - Professor Vagas -->
+    <div id="professor-vagas" class="tab-content"><div class="mb-6"><h2 class="text-3xl font-bold text-gray-900 mb-2">Vagas e Avisos</h2><p class="text-gray-600">Registre avisos para os alunos das suas turmas. Os avisos aparecem na aba Vagas; não são notificações push.</p></div><div id="professor-jobs" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div><div class="mt-6"><section class="bg-white rounded-xl shadow-md p-6 min-w-0"><h3 class="text-xl font-semibold text-gray-900 mb-4">Histórico de avisos</h3><div id="notification-history" class="space-y-3"></div></section></div></div>
+   </main>
+  </div><!-- Modal de Detalhes da Vaga -->
+  <!-- Modal de Notificação de Vagas -->
+  <!-- Notification Container -->
+  <div id="notification-container" class="fixed top-4 right-4 z-50" aria-live="polite" role="status"></div>
+  <div id="details-modal" class="modal" role="dialog" aria-modal="true" aria-label="Detalhes da vaga"><div class="modal-content max-w-2xl w-full"><div id="details-body" class="space-y-4"></div><button data-action="close-modal" data-target="details-modal" class="mt-6 px-4 py-2 bg-gray-600 text-white rounded-lg">Fechar</button></div></div><div id="notice-modal" class="modal" role="dialog" aria-modal="true" aria-label="Enviar aviso"><div class="modal-content max-w-md w-full"><h3 class="text-xl font-semibold mb-4">Avisar alunos sobre a vaga</h3><p id="notice-job" class="font-medium mb-4"></p><form id="notice-form"><fieldset><legend class="font-medium mb-2">Turmas</legend><div id="notice-classes" class="space-y-2 mb-4"></div></fieldset><label for="notice-message" class="block mb-2">Mensagem opcional</label><textarea id="notice-message" rows="3" maxlength="2000" class="w-full border rounded-lg p-3"></textarea><p class="text-xs text-gray-600 my-3">O aviso ficará na aba Vagas dos alunos selecionados.</p><div class="flex gap-3"><button type="button" data-action="close-modal" data-target="notice-modal" class="px-4 py-2 border rounded-lg">Cancelar</button><button class="px-4 py-2 bg-blue-600 text-white rounded-lg">Registrar aviso</button></div></form></div></div></body>
+</html>
